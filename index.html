@@ -2,65 +2,31 @@
 <html lang="en">
 <head>
     <meta name="google-site-verification" content="Mm-nGvyYIQgBjcMsZY2qgUZQ4RjzCWtNQF1NquRMtG0" />
-    <!-- প্রাথমিক অ্যাড স্ক্রিপ্ট - এটি অ্যাসিঙ্ক্রোনাসভাবে লোড হবে যাতে পেজ লোডিং ব্লক না হয় -->
     <script async>(function(d,z,s){s.src='https://'+d+'/401/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('groleegni.net',9704632,document.createElement('script'))</script>
     <meta charset="UTF-8">
 
     <!-- ================= SEO Tags Start ================= -->
     <title id="page-title">CineStream - Watch & Download Latest HD Movies</title>
-    <meta name="description" id="meta-description" content="Watch your favorite new and classic movies and web series. Find a huge collection of films from various genres on our website. Stream online now.">
-    <meta name="keywords" id="meta-keywords" content="movies, web series, watch online, stream movies, new movies, movie download, latest films, online cinema">
+    <meta name="description" id="meta-description" content="Watch your favorite new and classic movies and web series.">
+    <meta name="keywords" id="meta-keywords" content="movies, web series, watch online, stream movies">
     <meta name="robots" content="index, follow">
     <link rel="canonical" id="canonical-url" href="https://movietd.netlify.app/">
 
-    <!-- Open Graph / Facebook / LinkedIn / Pinterest -->
-    <meta property="og:title" id="og-title" content="CineStream - Watch New Movies & Series">
-    <meta property="og:description" id="og-description" content="Discover and stream a vast library of movies and web series online for free.">
+    <!-- Open Graph & Social Tags -->
+    <meta property="og:title" id="og-title" content="CineStream">
+    <meta property="og:description" id="og-description" content="Watch Movies Online">
     <meta property="og:image" id="og-image" content="https://dn710003.ca.archive.org/0/items/in-shot-20250729-125441055/InShot_20250729_125441055.jpg">
     <meta property="og:url" id="og-url" content="https://movietd.netlify.app/">
     <meta property="og:type" id="og-type" content="website">
-    <meta property="og:locale" content="en_US">
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" id="twitter-card" content="summary_large_image">
-    <meta name="twitter:site" content="@yourtwitterhandle">
-    <meta name="twitter:creator" content="@yourtwitterhandle">
-    <meta name="twitter:title" id="twitter-title" content="CineStream - Watch New Movies & Series">
-    <meta name="twitter:description" id="twitter-description" content="Discover and stream a vast library of movies and web series online for free.">
-    <meta name="twitter:image" id="twitter-image" content="https://dn710003.ca.archive.org/0/items/in-shot-20250729-125441055/InShot_20250729_125441055.jpg">
-
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json" id="website-schema">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "CineStream",
-      "url": "https://hindimovie.netlify.app/",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": {
-          "@type": "EntryPoint",
-          "urlTemplate": "https://hindimovie.netlify.app/?q={search_term_string}"
-        },
-        "query-input": "required name=search_term_string"
-      }
-    }
-    </script>
-    <script type="application/ld+json" id="movie-schema"></script>
-    <!-- ================= SEO Tags End ================= -->
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
-    <!-- Google Fonts & Icons -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- Tailwind CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
     <style>
@@ -73,7 +39,6 @@
             --button-bg-light: #333333;
             --button-border-color: #4a4a4a;
             --icon-color: #b0b0b0;
-            /* New Dune Style Colors */
             --dune-bg: #0D1117;
             --dune-text: #E0E0E0;
             --dune-text-muted: #8B949E;
@@ -94,12 +59,10 @@
             flex-direction: column;
             min-height: 100vh;
         }
-        *, *::before, *::after {
-            box-sizing: border-box;
-        }
+        *, *::before, *::after { box-sizing: border-box; }
 
         /* --- Loader --- */
-        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--background-color); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; gap: 15px; }
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--background-color); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
         .spinner { border: 6px solid #f3f3f330; border-top: 6px solid var(--primary-color); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
@@ -123,7 +86,6 @@
         .filter-btn { padding: 8px 18px; border: 1px solid #555; background: none; color: var(--text-color); border-radius: 20px; cursor: pointer; white-space: nowrap; }
         .filter-btn.active, .filter-btn:hover { background-color: var(--primary-color); color: #111; border-color: var(--primary-color); }
 
-        /* --- Movie Grid --- */
         #movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; }
         .movie-card { background-color: var(--surface-color); border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.2s; display: flex; flex-direction: column; }
         .movie-card:hover { transform: scale(1.05); }
@@ -151,32 +113,46 @@
         .latest-movies-grid::-webkit-scrollbar { display: none; }
         .latest-movie-item { flex-shrink: 0; width: 100px; cursor: pointer; }
         .latest-movie-item img { width: 100%; border-radius: 8px; margin-bottom: 0.5rem; }
-        .latest-movie-item p { font-size: 0.75rem; text-align: center; }
-        .description-text { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
-        .description-text.expanded { -webkit-line-clamp: unset; }
-        .read-more-btn { color: var(--dune-button-bg); cursor: pointer; font-weight: 500; display: none; }
-
+        
         /* -- Details View -- */
         #modal-details-view .poster-container { padding: 2.5rem 1.5rem 1.5rem; position: relative; }
         #modal-details-view .poster-container img { width: 100%; max-width: 280px; height: auto; aspect-ratio: 2 / 3; object-fit: cover; border-radius: 12px; margin: 0 auto; display: block; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         #modal-details-view h1 { text-align: center; font-size: 2.5rem; font-weight: 700; }
         #modal-details-view .meta-info { justify-content: center; display: flex; align-items: center; gap: 1rem; color: var(--dune-text-muted); font-size: 0.9rem; }
         #modal-details-view .watch-now-btn { background-color: var(--dune-button-bg); color: white; font-weight: bold; padding: 1rem; border-radius: 2rem; border: none; cursor: pointer; }
-        
+        .description-text { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
+        .description-text.expanded { -webkit-line-clamp: unset; }
+        .read-more-btn { color: var(--dune-button-bg); cursor: pointer; font-weight: 500; display: none; }
+
         /* -- Player View -- */
         #modal-player-view { display: none; }
         #modal-player-view .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; background: #000; }
-        #modal-player-view .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        #modal-player-view .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; z-index: 1; }
+        
+        /* ================= VIDEO AD OVERLAY (NEW) ================= */
+        /* এই ডিভটি ভিডিওর উপর থাকবে এবং প্রথম ক্লিকে এড দেখাবে */
+        #video-ad-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10; /* আইফ্রেমের উপরে */
+            background: transparent;
+            cursor: pointer;
+        }
+        /* ========================================================== */
+
         #modal-player-view h1 { font-size: 2.2rem; font-weight: 700; }
         #modal-player-view .meta-info { display: flex; align-items: center; gap: 1.5rem; color: var(--dune-text-muted); font-size: 0.9rem; }
         
-        /* -- Common -- */
+        /* -- Close Button -- */
         .modal-close-btn { position: absolute; top: 15px; right: 15px; width: 36px; height: 36px; background-color: rgba(0, 0, 0, 0.4); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; cursor: pointer; z-index: 20; }
         .cast-container { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1rem; }
         @media (max-width: 600px) { h1 { font-size: 2rem !important; } }
         
         /* --- Footer --- */
-        footer { background-color: var(--footer-bg-color); color: var(--footer-text-color); padding: 20px 15px; text-align: center; margin-top: auto; box-shadow: 0 -2px 10px rgba(0,0,0,0.3); }
+        footer { background-color: var(--footer-bg-color); color: var(--footer-text-color); padding: 20px 15px; text-align: center; margin-top: auto; }
         .footer-logo { font-size: 2rem; font-weight: 700; color: var(--primary-color); margin-bottom: 5px; }
         .footer-nav ul { list-style: none; padding: 0; margin: 0 auto 20px auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
         .footer-nav ul li a { color: var(--footer-link-color); text-decoration: none; font-size: 0.95rem; }
@@ -197,7 +173,7 @@
                 <button class="search-toggle-btn"><i class="fas fa-magnifying-glass"></i></button>
             </div>
             <button class="app-icon-btn" id="header-app-button" style="display: none;">
-                <img src="https://ia800509.us.archive.org/0/items/68ab-4def-1a-22d-download-prev-ui/68ab4def1a22d_download_prev_ui.png" alt="Download APK" class="app-icon-img">
+                <img src="" alt="Download APK" class="app-icon-img">
             </button>
             <button class="menu-toggle-btn" id="main-menu-toggle"><i class="fas fa-bars"></i></button>
         </div>
@@ -222,7 +198,8 @@
         <!-- View 1: Details (Default) -->
         <div id="modal-details-view" class="modal-container">
             <div class="poster-container">
-                 <span class="modal-close-btn" onclick="closeModal()">&times;</span>
+                 <!-- Close button uses the custom function -->
+                 <span class="modal-close-btn" onclick="handleCloseButton()">&times;</span>
                  <img id="details-poster-img" alt="Movie poster" src="">
             </div>
             <div class="modal-content-container">
@@ -254,7 +231,12 @@
         <!-- View 2: Player (Hidden by default) -->
         <div id="modal-player-view" class="modal-container">
              <div class="video-wrapper">
-                <span class="modal-close-btn" onclick="closeModal()">&times;</span>
+                <!-- Close button uses the custom function -->
+                <span class="modal-close-btn" onclick="handleCloseButton()">&times;</span>
+                
+                <!-- This Overlay div catches the click before the iframe -->
+                <div id="video-ad-overlay"></div>
+                
                 <iframe id="modal-video-player" src="" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
              </div>
              <div class="modal-content-container">
@@ -304,6 +286,15 @@
     </footer>
 
     <script>
+        // ================= AD CONFIGURATION =================
+        // আপনার ডাইরেক্ট লিংকটি নিচের ডাবল কোট এর মধ্যে বসান
+        const myDirectLink = "https://www.effectivegatecpm.com/hvc7d1r47?key=702b7dc6ad9c74ecf5650574dead733f";
+        
+        // অ্যাড ট্র্যাকিং ভেরিয়েবল (পেজ রিফ্রেশ না করা পর্যন্ত সেভ থাকবে)
+        let videoAdShownThisSession = false; // ভিডিওতে ক্লিক করলে ১ বার দেখাবে
+        let closeAdShownThisSession = false; // ক্লোজ বাটনে ক্লিক করলে ১ বার দেখাবে
+        // ====================================================
+
         // --- Firebase Config ---
         const firebaseConfig = {
             apiKey: "AIzaSyD-tlrPK8s9h87PVqtvprBy_phcCqONLeU",
@@ -328,7 +319,6 @@
         let savedMovieIds = new Set();
         let currentMovieData = null;
 
-        // --- Main Functions ---
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('current-year').textContent = new Date().getFullYear();
             loadSavedMoviesFromLocalStorage();
@@ -337,7 +327,6 @@
         });
         
         function setupEventListeners() {
-            // Side Menu
             const mainMenuToggle = document.getElementById('main-menu-toggle');
             const sideMenuOverlay = document.getElementById('side-menu-overlay');
             mainMenuToggle.addEventListener('click', () => sideMenuOverlay.classList.add('active'));
@@ -345,7 +334,6 @@
             document.getElementById('menu-home-btn').addEventListener('click', (e) => { e.preventDefault(); sideMenuOverlay.classList.remove('active'); filterByCategory('All'); });
             document.getElementById('menu-saved-movies-btn').addEventListener('click', (e) => { e.preventDefault(); sideMenuOverlay.classList.remove('active'); filterByCategory('Saved'); });
 
-            // Search Bar
             const searchContainer = document.querySelector('.search-container');
             const searchInput = document.getElementById('search-input');
             document.querySelector('.search-toggle-btn').addEventListener('click', () => {
@@ -357,6 +345,22 @@
                 const filtered = allMovies.filter(movie => movie.title.toLowerCase().includes(term));
                 displayMovies(filtered);
             });
+
+            // --- VIDEO AD LOGIC ---
+            // ভিডিওর ওপরের অদৃশ্য লেয়ারে ক্লিক হ্যান্ডেলিং
+            const videoOverlay = document.getElementById('video-ad-overlay');
+            videoOverlay.addEventListener('click', function() {
+                if (!videoAdShownThisSession) {
+                    // প্রথমবার ক্লিক: এড ওপেন হবে
+                    window.open(myDirectLink, '_blank');
+                    videoAdShownThisSession = true;
+                    // লেয়ার লুকিয়ে ফেলুন যাতে ভিডিও প্লে করা যায়
+                    this.style.display = 'none';
+                } else {
+                    // দ্বিতীয়বার থেকে: শুধু লেয়ার সরবে, এড আসবে না
+                    this.style.display = 'none';
+                }
+            });
         }
 
         function loadMoviesAndSettings() {
@@ -365,7 +369,6 @@
                 moviesRef.orderByChild('timestamp').once('value'),
                 siteSettingsRef.once('value')
             ]).then(([moviesSnapshot, settingsSnapshot]) => {
-                // Load Movies
                 const moviesData = moviesSnapshot.val();
                 if (moviesData) {
                     allMovies = Object.entries(moviesData).map(([key, value]) => ({
@@ -378,12 +381,14 @@
                     handleUrlPath();
                 }
                 
-                // Load Settings (for app download button)
                 const settingsData = settingsSnapshot.val();
                 const appButton = document.getElementById('header-app-button');
                 if (settingsData && settingsData.appDownloadFileLink) {
                     appButton.style.display = 'flex';
                     appButton.onclick = () => window.open(settingsData.appDownloadFileLink, '_blank');
+                    // আইকন ইমেজ সেট করুন যদি ডাটাবেসে থাকে, না হলে ডিফল্ট
+                    if(settingsData.appIcon) appButton.querySelector('img').src = settingsData.appIcon;
+                    else appButton.querySelector('img').src = "https://ia800509.us.archive.org/0/items/68ab-4def-1a-22d-download-prev-ui/68ab4def1a22d_download_prev_ui.png";
                 } else {
                     appButton.style.display = 'none';
                 }
@@ -429,10 +434,14 @@
             displayMovies(moviesToDisplay);
         }
 
-        // --- Modal & Player Functions ---
         function openModal(movie) {
             currentMovieData = movie;
             
+            // প্রতিবার মুভি ওপেন করার সময় ভিডিওর ওপরের লেয়ার আবার সক্রিয় করতে হবে
+            // কিন্তু videoAdShownThisSession ভেরিয়েবল রিসেট হবে না (গ্লোবাল লিমিট)
+            const videoOverlay = document.getElementById('video-ad-overlay');
+            if (videoOverlay) videoOverlay.style.display = 'block';
+
             modalDetailsView.style.display = 'block';
             modalPlayerView.style.display = 'none';
             modalVideoPlayer.src = '';
@@ -443,6 +452,7 @@
             populateViewData('details', movie);
             populateViewData('player', movie);
 
+            // Watch Now বাটনে ক্লিক করলে শুধু প্লেয়ার ভিউ আসবে, কোনো অ্যাড আসবে না
             document.getElementById('main-watch-now-trigger-new').onclick = switchToPlayerView;
             
             modal.style.display = 'block';
@@ -461,7 +471,6 @@
                 document.getElementById('details-poster-img').src = movie.image;
             }
 
-            // Description and Read More logic
             const descP = document.getElementById(`${viewPrefix}-description`);
             const readMoreBtn = document.getElementById(`${viewPrefix}-read-more-btn`);
             descP.textContent = movie.description || 'No description available.';
@@ -505,19 +514,29 @@
             }
         }
 
+        // --- CLOSE BUTTON LOGIC ---
+        function handleCloseButton() {
+            // যদি এই সেশনে ক্লোজ বাটনে আগে অ্যাড না এসে থাকে
+            if (!closeAdShownThisSession) {
+                window.open(myDirectLink, '_blank');
+                closeAdShownThisSession = true; // ফ্ল্যাগ সেট করুন যাতে আর অ্যাড না আসে
+            }
+            // অ্যাড আসুক বা না আসুক, মডাল বন্ধ হবে
+            closeModal();
+        }
+
         function closeModal() {
             history.pushState(null, "CineStream", '/');
             document.title = "CineStream - Watch & Download Latest HD Movies";
             modal.style.display = 'none';
             document.body.style.overflow = 'auto';
-            modalVideoPlayer.src = ''; // Stop video
+            modalVideoPlayer.src = ''; 
         }
         
         window.onpopstate = (event) => {
             if (modal.style.display === 'block') closeModal();
         };
 
-        // --- Utility Functions ---
         function loadSavedMoviesFromLocalStorage() {
             const saved = localStorage.getItem('cineStreamSavedMovies');
             if (saved) savedMovieIds = new Set(JSON.parse(saved));
@@ -548,4 +567,4 @@
         }
     </script>
 </body>
-</html>
+        </html>
