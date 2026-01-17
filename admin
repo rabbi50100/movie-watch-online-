@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineStream - Admin Panel</title>
+    <!-- Bootstrap CSS for Admin UI -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+
+    <style>
+        body { background-color: #f4f6f9; }
+        .login-container { max-width: 400px; margin: 100px auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .admin-container { display: none; } /* Hidden until logged in */
+        .movie-img-preview { width: 50px; height: 75px; object-fit: cover; border-radius: 4px; }
+        .sidebar { min-height: 100vh; background: #343a40; color: white; }
+        .nav-link { color: #cfd8dc; }
+        .nav-link.active { background-color: #0d6efd; color: white; }
+        .nav-link:hover { color: white; }
+        .card-stats { border-left: 4px solid #0d6efd; }
+    </style>
+</head>
+<body>
+
+    <!-- LOGIN SECTION -->
+    <div id="login-section" class="container">
+        <div class="login-container text-center">
+            <h3 class="mb-4">Admin Login</h3>
+            <div class="mb-3">
+                <input type="email" id="admin-email" class="form-control" placeholder="Email Address">
+            </div>
+            <div class="mb-3">
+                <input type="password" id="admin-pass" class="form-control" placeholder="Password">
+            </div>
+            <button onclick="login()" class="btn btn-primary w-100">Login</button>
+            <p id="login-error" class="text-danger mt-2"></p>
+        </div>
+    </div>
+
+    <!-- ADMIN DASHBOARD SECTION -->
+    <div id="dashboard-section" class="container-fluid admin-container">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 sidebar p-3">
+                <h4 class="text-center mb-4">CineStream Admin</h4>
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-2">
+                        <a href="#" class="nav-link active" onclick="showTab('movies')"><i class="fas fa-film me-2"></i> Movies</a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a href="#" class="nav-link" onclick="showTab('settings')"><i class="fas fa-cog me-2"></i> Settings & Ads</a>
+                    </li>
+                    <li class="nav-item mt-5">
+                        <button onclick="logout()" class="btn btn-danger w-100"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-10 p-4">
+                
+                <!-- Stats Row -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card card-stats shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Movies</h5>
+                                <h2 id="total-movies-count">0</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MOVIES TAB -->
+                <div id="tab-movies">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3>Movie List</h3>
+                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#movieModal" onclick="resetForm()">
+                            <i class="fas fa-plus"></i> Add New Movie
+                        </button>
+                    </div>
+                    
+                    <input type="text" id="search-bar" class="form-control mb-3" placeholder="Search movie by title..." onkeyup="searchMovie()">
+
+                    <div class="table-responsive bg-white rounded shadow-sm p-2">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Poster</th>
+                                    <th>Title</th>
+                                    <th>Category</th>
+                                    <th>Year</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="movies-table-body">
+                                <!-- Data will allow here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SETTINGS TAB -->
+                <div id="tab-settings" style="display: none;">
+                    <h3>Site Settings</h3>
+                    <div class="card p-4 shadow-sm" style="max-width: 600px;">
+                        <div class="mb-3">
+                            <label class="form-label">Ad Direct Link (Required)</label>
+                            <input type="text" id="setting-ad-link" class="form-control" placeholder="https://...">
+                        </div>
+                        <hr>
+                        <h5>App Promotion</h5>
+                        <div class="mb-3">
+                            <label class="form-label">App Download Link</label>
+                            <input type="text" id="setting-app-link" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">App Icon URL</label>
+                            <input type="text" id="setting-app-icon" class="form-control">
+                        </div>
+                        <button onclick="saveSettings()" class="btn btn-primary">Save Settings</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Movie Modal -->
+    <div class="modal fade" id="movieModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-title">Add Movie</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="movie-id">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label>Title</label>
+                            <input type="text" id="m-title" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>Category</label>
+                            <select id="m-category" class="form-control">
+                                <option value="Action">Action</option>
+                                <option value="Comedy">Comedy</option>
+                                <option value="Drama">Drama</option>
+                                <option value="Horror">Horror</option>
+                                <option value="Sci-Fi">Sci-Fi</option>
+                                <option value="Romance">Romance</option>
+                                <option value="upcoming">Upcoming</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label>Poster Image URL</label>
+                            <input type="text" id="m-image" class="form-control" placeholder="https://...">
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label>Video Stream/Download Link (Iframe/MP4)</label>
+                            <input type="text" id="m-link" class="form-control" placeholder="https://...">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>Director</label>
+                            <input type="text" id="m-director" class="form-control">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label>Release Date/Year</label>
+                            <input type="text" id="m-year" class="form-control" placeholder="2024">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label>IMDB Rating</label>
+                            <input type="text" id="m-rating" class="form-control" placeholder="8.5">
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label>Cast (Comma separated)</label>
+                            <input type="text" id="m-cast" class="form-control" placeholder="Actor 1, Actor 2...">
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label>Description</label>
+                            <textarea id="m-desc" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="saveMovie()">Save Movie</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // --- Firebase Config (SAME AS YOUR SITE) ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-tlrPK8s9h87PVqtvprBy_phcCqONLeU",
+            authDomain: "my-movie-81a4b.firebaseapp.com",
+            databaseURL: "https://my-movie-81a4b-default-rtdb.firebaseio.com",
+            projectId: "my-movie-81a4b",
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+
+        // --- AUTH LOGIC ---
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('dashboard-section').style.display = 'block';
+                loadMovies();
+                loadSettings();
+            } else {
+                document.getElementById('login-section').style.display = 'block';
+                document.getElementById('dashboard-section').style.display = 'none';
+            }
+        });
+
+        function login() {
+            const email = document.getElementById('admin-email').value;
+            const pass = document.getElementById('admin-pass').value;
+            auth.signInWithEmailAndPassword(email, pass)
+                .catch(error => document.getElementById('login-error').textContent = error.message);
+        }
+
+        function logout() {
+            auth.signOut();
+        }
+
+        // --- TAB LOGIC ---
+        function showTab(tabName) {
+            document.getElementById('tab-movies').style.display = tabName === 'movies' ? 'block' : 'none';
+            document.getElementById('tab-settings').style.display = tabName === 'settings' ? 'block' : 'none';
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // --- MOVIES CRUD ---
+        let allMovies = [];
+
+        function loadMovies() {
+            db.ref('movies').on('value', snapshot => {
+                const data = snapshot.val();
+                const tbody = document.getElementById('movies-table-body');
+                tbody.innerHTML = '';
+                allMovies = [];
+
+                if (data) {
+                    Object.entries(data).forEach(([key, movie]) => {
+                        allMovies.push({key, ...movie});
+                    });
+                    
+                    // Sort by timestamp desc
+                    allMovies.sort((a, b) => b.timestamp - a.timestamp);
+                    document.getElementById('total-movies-count').innerText = allMovies.length;
+                    renderTable(allMovies);
+                }
+            });
+        }
+
+        function renderTable(movies) {
+            const tbody = document.getElementById('movies-table-body');
+            tbody.innerHTML = '';
+            movies.forEach(movie => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><img src="${movie.image}" class="movie-img-preview" alt="poster"></td>
+                    <td>${movie.title}</td>
+                    <td><span class="badge bg-secondary">${movie.category}</span></td>
+                    <td>${movie.releaseDate || '-'}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary me-2" onclick="editMovie('${movie.key}')"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteMovie('${movie.key}')"><i class="fas fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function searchMovie() {
+            const term = document.getElementById('search-bar').value.toLowerCase();
+            const filtered = allMovies.filter(m => m.title.toLowerCase().includes(term));
+            renderTable(filtered);
+        }
+
+        // FORM HANDLING
+        const movieModal = new bootstrap.Modal(document.getElementById('movieModal'));
+
+        function resetForm() {
+            document.getElementById('movie-id').value = '';
+            document.getElementById('m-title').value = '';
+            document.getElementById('m-image').value = '';
+            document.getElementById('m-link').value = '';
+            document.getElementById('m-director').value = '';
+            document.getElementById('m-year').value = '';
+            document.getElementById('m-rating').value = '';
+            document.getElementById('m-cast').value = '';
+            document.getElementById('m-desc').value = '';
+            document.getElementById('modal-title').innerText = "Add New Movie";
+        }
+
+        function editMovie(key) {
+            const movie = allMovies.find(m => m.key === key);
+            if(movie) {
+                document.getElementById('movie-id').value = key;
+                document.getElementById('m-title').value = movie.title;
+                document.getElementById('m-category').value = movie.category || 'Action';
+                document.getElementById('m-image').value = movie.image;
+                document.getElementById('m-link').value = movie.link;
+                document.getElementById('m-director').value = movie.director || '';
+                document.getElementById('m-year').value = movie.releaseDate || '';
+                document.getElementById('m-rating').value = movie.rating || '';
+                document.getElementById('m-cast').value = movie.cast || '';
+                document.getElementById('m-desc').value = movie.description || '';
+                
+                document.getElementById('modal-title').innerText = "Edit Movie";
+                movieModal.show();
+            }
+        }
+
+        function saveMovie() {
+            const id = document.getElementById('movie-id').value;
+            const data = {
+                title: document.getElementById('m-title').value,
+                category: document.getElementById('m-category').value,
+                image: document.getElementById('m-image').value,
+                link: document.getElementById('m-link').value,
+                director: document.getElementById('m-director').value,
+                releaseDate: document.getElementById('m-year').value,
+                rating: document.getElementById('m-rating').value,
+                cast: document.getElementById('m-cast').value,
+                description: document.getElementById('m-desc').value,
+                timestamp: id ? (allMovies.find(m=>m.key===id).timestamp) : Date.now()
+            };
+
+            if(!data.title || !data.image || !data.link) {
+                alert("Title, Image and Link are required!");
+                return;
+            }
+
+            if (id) {
+                db.ref('movies/' + id).update(data);
+            } else {
+                db.ref('movies').push(data);
+            }
+            movieModal.hide();
+        }
+
+        function deleteMovie(key) {
+            if(confirm('Are you sure you want to delete this movie?')) {
+                db.ref('movies/' + key).remove();
+            }
+        }
+
+        // --- SETTINGS CRUD ---
+        function loadSettings() {
+            db.ref('siteSettings').once('value', snapshot => {
+                const val = snapshot.val();
+                if(val) {
+                    document.getElementById('setting-ad-link').value = val.adLink || '';
+                    document.getElementById('setting-app-link').value = val.appDownloadFileLink || '';
+                    document.getElementById('setting-app-icon').value = val.appIcon || '';
+                }
+            });
+        }
+
+        function saveSettings() {
+            const data = {
+                adLink: document.getElementById('setting-ad-link').value,
+                appDownloadFileLink: document.getElementById('setting-app-link').value,
+                appIcon: document.getElementById('setting-app-icon').value
+            };
+            db.ref('siteSettings').update(data).then(() => {
+                alert("Settings Saved!");
+            });
+        }
+    </script>
+</body>
+</html>
