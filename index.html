@@ -12,6 +12,15 @@
     <meta name="robots" content="index, follow">
     <link rel="canonical" id="canonical-url" href="https://movietd.netlify.app/">
 
+    <!-- ================= SPEED OPTIMIZATION TAGS (NEW) ================= -->
+    <!-- সাধারণ ভিডিও সার্ভারগুলোর সাথে আগে থেকেই কানেকশন স্থাপন করা হচ্ছে -->
+    <link rel="preconnect" href="https://www.gstatic.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://www.gstatic.com">
+    <!-- আপনার ভিডিও যদি ইউটিউব বা অন্য সার্ভারে থাকে তার ডোমেইন এখানে যোগ করতে পারেন -->
+    <!-- ================================================================= -->
+
     <!-- Open Graph & Social Tags -->
     <meta property="og:title" id="og-title" content="CineStream">
     <meta property="og:description" id="og-description" content="Watch Movies Online">
@@ -127,11 +136,25 @@
         /* -- Player View -- */
         #modal-player-view { display: none; }
         #modal-player-view .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; background: #000; }
-        #modal-player-view .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; z-index: 1; }
         
-        /* ================= VIDEO AD OVERLAY (NEW) ================= */
-        /* এই ডিভটি ভিডিওর উপর থাকবে এবং প্রথম ক্লিকে এড দেখাবে */
+        /* Optimized Iframe styling */
+        #modal-player-view .video-wrapper iframe { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            border: 0; 
+            z-index: 1;
+            /* হার্ডওয়্যার এক্সিলারেশন অন করা */
+            transform: translateZ(0);
+            will-change: transform;
+        }
+        
+        /* ================= VIDEO AD OVERLAY (MODIFIED) ================= */
+        /* এটা শুরুতে লুকানো থাকবে (display: none), ২ মিনিট পর JS দিয়ে একটিভ হবে */
         #video-ad-overlay {
+            display: none; 
             position: absolute;
             top: 0;
             left: 0;
@@ -237,7 +260,21 @@
                 <!-- This Overlay div catches the click before the iframe -->
                 <div id="video-ad-overlay"></div>
                 
-                <iframe id="modal-video-player" src="" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                <!-- 
+                   SPEED OPTIMIZATION:
+                   1. loading="eager" -> ভিডিও লোড হতে দেরি করবে না।
+                   2. fetchpriority="high" -> ব্রাউজারকে বলবে একে আগে লোড করতে।
+                   3. allow -> হার্ডওয়্যার ফিচারগুলো এনাবল করা হয়েছে।
+                -->
+                <iframe 
+                    id="modal-video-player" 
+                    src="" 
+                    loading="eager" 
+                    fetchpriority="high"
+                    title="Movie Player"
+                    allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer" 
+                    allowfullscreen>
+                </iframe>
              </div>
              <div class="modal-content-container">
                 <h1 id="player-title"></h1>
@@ -287,12 +324,11 @@
 
     <script>
         // ================= AD CONFIGURATION =================
-        // আপনার ডাইরেক্ট লিংকটি নিচের ডাবল কোট এর মধ্যে বসান
         const myDirectLink = "https://www.effectivegatecpm.com/hvc7d1r47?key=702b7dc6ad9c74ecf5650574dead733f";
         
-        // অ্যাড ট্র্যাকিং ভেরিয়েবল (পেজ রিফ্রেশ না করা পর্যন্ত সেভ থাকবে)
-        let videoAdShownThisSession = false; // ভিডিওতে ক্লিক করলে ১ বার দেখাবে
-        let closeAdShownThisSession = false; // ক্লোজ বাটনে ক্লিক করলে ১ বার দেখাবে
+        // টাইমার ভেরিয়েবল
+        let overlayAppearanceTimer = null; // ২ মিনিট পরে ওভারলে আসার জন্য
+        let watchLimitTimer = null;        // ৩০ মিনিট দেখার লিমিটের জন্য
         // ====================================================
 
         // --- Firebase Config ---
@@ -346,20 +382,21 @@
                 displayMovies(filtered);
             });
 
-            // --- VIDEO AD LOGIC ---
+            // ================= REQ 1: 2-MINUTE DELAY CLICK AD LOGIC =================
             // ভিডিওর ওপরের অদৃশ্য লেয়ারে ক্লিক হ্যান্ডেলিং
             const videoOverlay = document.getElementById('video-ad-overlay');
             videoOverlay.addEventListener('click', function() {
-                if (!videoAdShownThisSession) {
-                    // প্রথমবার ক্লিক: এড ওপেন হবে
-                    window.open(myDirectLink, '_blank');
-                    videoAdShownThisSession = true;
-                    // লেয়ার লুকিয়ে ফেলুন যাতে ভিডিও প্লে করা যায়
-                    this.style.display = 'none';
-                } else {
-                    // দ্বিতীয়বার থেকে: শুধু লেয়ার সরবে, এড আসবে না
-                    this.style.display = 'none';
+                // সেশন স্টোরেজ চেক করব যে ২ মিনিটের এডে ক্লিক হয়েছে কিনা
+                const adClickedAfter2Min = sessionStorage.getItem('adClickedAfter2Min');
+
+                if (!adClickedAfter2Min) {
+                    // যদি আগে ক্লিক না করে থাকে, তাহলে এডে নিয়ে যাবে
+                    window.location.href = myDirectLink; // Direct Link - Page Change
+                    sessionStorage.setItem('adClickedAfter2Min', 'true'); // মার্ক করে রাখলাম
                 }
+                
+                // কাজ শেষে ওভারলে হাইড করে দেবো যাতে ইউজার ভিডিও পজ/প্লে করতে পারে
+                this.style.display = 'none';
             });
         }
 
@@ -386,7 +423,6 @@
                 if (settingsData && settingsData.appDownloadFileLink) {
                     appButton.style.display = 'flex';
                     appButton.onclick = () => window.open(settingsData.appDownloadFileLink, '_blank');
-                    // আইকন ইমেজ সেট করুন যদি ডাটাবেসে থাকে, না হলে ডিফল্ট
                     if(settingsData.appIcon) appButton.querySelector('img').src = settingsData.appIcon;
                     else appButton.querySelector('img').src = "https://ia800509.us.archive.org/0/items/68ab-4def-1a-22d-download-prev-ui/68ab4def1a22d_download_prev_ui.png";
                 } else {
@@ -436,12 +472,6 @@
 
         function openModal(movie) {
             currentMovieData = movie;
-            
-            // প্রতিবার মুভি ওপেন করার সময় ভিডিওর ওপরের লেয়ার আবার সক্রিয় করতে হবে
-            // কিন্তু videoAdShownThisSession ভেরিয়েবল রিসেট হবে না (গ্লোবাল লিমিট)
-            const videoOverlay = document.getElementById('video-ad-overlay');
-            if (videoOverlay) videoOverlay.style.display = 'block';
-
             modalDetailsView.style.display = 'block';
             modalPlayerView.style.display = 'none';
             modalVideoPlayer.src = '';
@@ -452,7 +482,6 @@
             populateViewData('details', movie);
             populateViewData('player', movie);
 
-            // Watch Now বাটনে ক্লিক করলে শুধু প্লেয়ার ভিউ আসবে, কোনো অ্যাড আসবে না
             document.getElementById('main-watch-now-trigger-new').onclick = switchToPlayerView;
             
             modal.style.display = 'block';
@@ -512,20 +541,59 @@
             if (currentMovieData && currentMovieData.link) {
                 modalVideoPlayer.src = currentMovieData.link;
             }
+
+            // আগের কোনো টাইমার থাকলে ক্লিয়ার করা
+            if (overlayAppearanceTimer) clearTimeout(overlayAppearanceTimer);
+            if (watchLimitTimer) clearTimeout(watchLimitTimer);
+
+            // ================= REQ 1: ২ মিনিট পর ওভারলে চালু করা =================
+            const videoOverlay = document.getElementById('video-ad-overlay');
+            const adClickedAfter2Min = sessionStorage.getItem('adClickedAfter2Min');
+
+            // ভিডিও প্লে শুরু হলো, ওভারলে লুকিয়ে রাখি যাতে ইউজার প্লে করতে পারে
+            videoOverlay.style.display = 'none';
+
+            // যদি এই সেশনে ২ মিনিটের এডে ক্লিক না হয়ে থাকে, তবেই টাইমার চালু হবে
+            if (!adClickedAfter2Min) {
+                overlayAppearanceTimer = setTimeout(() => {
+                    // ২ মিনিট (১২০০০০ মি.সে.) পর এই কোড চলবে
+                    videoOverlay.style.display = 'block'; 
+                    // এখন ওভারলে ভিডিওর উপরে আছে। ইউজার পজ করতে গেলেই ওভারলেতে ক্লিক হবে -> এডে যাবে
+                }, 2 * 60 * 1000); // 2 minutes
+            }
+
+            // ================= REQ 3: টানা ৩০ মিনিট দেখার লজিক =================
+            const watched30Min = sessionStorage.getItem('watched30Min');
+            if (!watched30Min) {
+                watchLimitTimer = setTimeout(() => {
+                    // ৩০ মিনিট (১৮০০০০০ মি.সে.) হয়ে গেলে অটো এডে নিয়ে যাবে
+                    sessionStorage.setItem('watched30Min', 'true');
+                    window.location.href = myDirectLink;
+                }, 30 * 60 * 1000); // 30 minutes
+            }
         }
 
         // --- CLOSE BUTTON LOGIC ---
         function handleCloseButton() {
-            // যদি এই সেশনে ক্লোজ বাটনে আগে অ্যাড না এসে থাকে
-            if (!closeAdShownThisSession) {
-                window.open(myDirectLink, '_blank');
-                closeAdShownThisSession = true; // ফ্ল্যাগ সেট করুন যাতে আর অ্যাড না আসে
+            // ================= REQ 2: ক্লোজ বাটন এড লজিক =================
+            // সেশনে আগে ক্লোজ এড দেখানো হয়েছে কিনা চেক করা
+            const popupCloseAdShown = sessionStorage.getItem('popupCloseAdShown');
+            
+            if (!popupCloseAdShown) {
+                // আগে দেখানো হয়নি -> এডে নিয়ে যাও
+                sessionStorage.setItem('popupCloseAdShown', 'true'); // মার্ক করলাম
+                window.location.href = myDirectLink; // এডে রিডাইরেক্ট
+            } else {
+                // দেখানো হয়েছে -> শুধু মডাল বন্ধ করো
+                closeModal();
             }
-            // অ্যাড আসুক বা না আসুক, মডাল বন্ধ হবে
-            closeModal();
         }
 
         function closeModal() {
+            // মডাল বন্ধ হলে সব টাইমার বন্ধ করে দিতে হবে
+            if (overlayAppearanceTimer) clearTimeout(overlayAppearanceTimer);
+            if (watchLimitTimer) clearTimeout(watchLimitTimer);
+
             history.pushState(null, "CineStream", '/');
             document.title = "CineStream - Watch & Download Latest HD Movies";
             modal.style.display = 'none';
@@ -567,4 +635,4 @@
         }
     </script>
 </body>
-        </html>
+</html>
