@@ -5,28 +5,24 @@
     <script async>(function(d,z,s){s.src='https://'+d+'/401/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('groleegni.net',9704632,document.createElement('script'))</script>
     <meta charset="UTF-8">
 
-    <!-- ================= SEO Tags Start ================= -->
+    <!-- ================= SEO Tags ================= -->
     <title id="page-title">CineStream - Watch & Download Latest HD Movies</title>
     <meta name="description" id="meta-description" content="Watch your favorite new and classic movies and web series.">
     <meta name="keywords" id="meta-keywords" content="movies, web series, watch online, stream movies">
     <meta name="robots" content="index, follow">
     <link rel="canonical" id="canonical-url" href="https://movietd.netlify.app/">
 
-    <!-- ================= SPEED OPTIMIZATION TAGS (NEW) ================= -->
-    <!-- সাধারণ ভিডিও সার্ভারগুলোর সাথে আগে থেকেই কানেকশন স্থাপন করা হচ্ছে -->
+    <!-- Speed Optimization -->
     <link rel="preconnect" href="https://www.gstatic.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="dns-prefetch" href="https://www.gstatic.com">
-    <!-- আপনার ভিডিও যদি ইউটিউব বা অন্য সার্ভারে থাকে তার ডোমেইন এখানে যোগ করতে পারেন -->
-    <!-- ================================================================= -->
 
-    <!-- Open Graph & Social Tags -->
-    <meta property="og:title" id="og-title" content="CineStream">
-    <meta property="og:description" id="og-description" content="Watch Movies Online">
-    <meta property="og:image" id="og-image" content="https://dn710003.ca.archive.org/0/items/in-shot-20250729-125441055/InShot_20250729_125441055.jpg">
-    <meta property="og:url" id="og-url" content="https://movietd.netlify.app/">
-    <meta property="og:type" id="og-type" content="website">
+    <!-- Open Graph -->
+    <meta property="og:title" content="CineStream">
+    <meta property="og:description" content="Watch Movies Online">
+    <meta property="og:image" content="https://dn710003.ca.archive.org/0/items/in-shot-20250729-125441055/InShot_20250729_125441055.jpg">
+    <meta property="og:url" content="https://movietd.netlify.app/">
+    <meta property="og:type" content="website">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Firebase SDK -->
@@ -115,6 +111,7 @@
         /* --- Movie Modal Style --- */
         #movie-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--dune-bg); z-index: 1001; display: none; overflow-y: auto; }
         .modal-container { width: 100%; max-width: 500px; margin: 0 auto; color: var(--dune-text); }
+        
         .modal-content-container { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
         .modal-section h3 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; }
         hr.modal-separator { border: 0; height: 1px; background-color: var(--dune-separator); }
@@ -133,44 +130,70 @@
         .description-text.expanded { -webkit-line-clamp: unset; }
         .read-more-btn { color: var(--dune-button-bg); cursor: pointer; font-weight: 500; display: none; }
 
-        /* -- Player View -- */
-        #modal-player-view { display: none; }
-        #modal-player-view .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; background: #000; }
-        
-        /* Optimized Iframe styling */
-        #modal-player-view .video-wrapper iframe { 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            border: 0; 
-            z-index: 1;
-            /* হার্ডওয়্যার এক্সিলারেশন অন করা */
-            transform: translateZ(0);
-            will-change: transform;
-        }
-        
-        /* ================= VIDEO AD OVERLAY (MODIFIED) ================= */
-        /* এটা শুরুতে লুকানো থাকবে (display: none), ২ মিনিট পর JS দিয়ে একটিভ হবে */
-        #video-ad-overlay {
+        /* 
+           =========================================================
+           FULL SCREEN PLAYER STYLES (100% Mobile Screen Fix)
+           =========================================================
+        */
+        #modal-player-view { 
             display: none; 
-            position: absolute;
+            /* Force this container to be an overlay */
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 10; /* আইফ্রেমের উপরে */
-            background: transparent;
-            cursor: pointer;
+            background-color: #000;
+            z-index: 5000; /* Highest Z-Index to cover everything */
+            margin: 0 !important;
+            max-width: none !important;
         }
-        /* ========================================================== */
 
-        #modal-player-view h1 { font-size: 2.2rem; font-weight: 700; }
-        #modal-player-view .meta-info { display: flex; align-items: center; gap: 1.5rem; color: var(--dune-text-muted); font-size: 0.9rem; }
+        #modal-player-view .video-wrapper { 
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;   /* Full Viewport Width */
+            height: 100vh;  /* Full Viewport Height */
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
         
-        /* -- Close Button -- */
-        .modal-close-btn { position: absolute; top: 15px; right: 15px; width: 36px; height: 36px; background-color: rgba(0, 0, 0, 0.4); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; cursor: pointer; z-index: 20; }
+        #modal-player-view iframe { 
+            width: 100%; 
+            height: 100%; 
+            border: 0; 
+        }
+
+        /* Hide the details below player when in full screen mode to avoid scroll */
+        #modal-player-view .modal-content-container {
+            display: none; 
+        }
+
+        /* 
+           Close Button Style 
+           Enhanced visibility for full screen
+        */
+        .modal-close-btn { 
+            position: absolute; 
+            top: 20px; 
+            right: 20px; 
+            width: 40px; 
+            height: 40px; 
+            background-color: rgba(0, 0, 0, 0.6); 
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 1.8rem; 
+            cursor: pointer; 
+            z-index: 5001; /* Above the video */
+        }
+        
         .cast-container { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1rem; }
         @media (max-width: 600px) { h1 { font-size: 2rem !important; } }
         
@@ -221,7 +244,7 @@
         <!-- View 1: Details (Default) -->
         <div id="modal-details-view" class="modal-container">
             <div class="poster-container">
-                 <!-- Close button uses the custom function -->
+                 <!-- Close button logic attached here -->
                  <span class="modal-close-btn" onclick="handleCloseButton()">&times;</span>
                  <img id="details-poster-img" alt="Movie poster" src="">
             </div>
@@ -251,21 +274,12 @@
             </div>
         </div>
 
-        <!-- View 2: Player (Hidden by default) -->
-        <div id="modal-player-view" class="modal-container">
+        <!-- View 2: Player (FULL SCREEN) -->
+        <div id="modal-player-view">
              <div class="video-wrapper">
-                <!-- Close button uses the custom function -->
+                <!-- Close button for player view (triggers Ad Logic) -->
                 <span class="modal-close-btn" onclick="handleCloseButton()">&times;</span>
                 
-                <!-- This Overlay div catches the click before the iframe -->
-                <div id="video-ad-overlay"></div>
-                
-                <!-- 
-                   SPEED OPTIMIZATION:
-                   1. loading="eager" -> ভিডিও লোড হতে দেরি করবে না।
-                   2. fetchpriority="high" -> ব্রাউজারকে বলবে একে আগে লোড করতে।
-                   3. allow -> হার্ডওয়্যার ফিচারগুলো এনাবল করা হয়েছে।
-                -->
                 <iframe 
                     id="modal-video-player" 
                     src="" 
@@ -276,29 +290,9 @@
                     allowfullscreen>
                 </iframe>
              </div>
+             <!-- Info container hidden by CSS in player mode for full immersion -->
              <div class="modal-content-container">
-                <h1 id="player-title"></h1>
-                <div class="meta-info">
-                    <span id="player-meta-year"></span>
-                    <span><i class="far fa-clock"></i> 2h 15m</span>
-                    <span>IMDB <span id="player-rating"></span></span>
-                    <span><i class="far fa-heart"></i> Like</span>
-                </div>
-                <div>
-                   <p id="player-description" class="description-text"></p>
-                   <span id="player-read-more-btn" class="read-more-btn">Read More</span>
-                </div>
-                <hr class="modal-separator">
-                <div class="modal-section">
-                   <h3>Cast & Crew</h3>
-                   <p id="player-director" class="text-sm text-gray-400"></p>
-                   <div id="player-cast-container" class="cast-container mt-4"></div>
-                </div>
-                <hr class="modal-separator">
-                <div class="modal-section">
-                   <h3>Latest Movies</h3>
-                   <div id="player-latest-movies" class="latest-movies-grid"></div>
-                </div>
+                 <!-- Content hidden -->
              </div>
         </div>
     </div>
@@ -326,9 +320,8 @@
         // ================= AD CONFIGURATION =================
         const myDirectLink = "https://www.effectivegatecpm.com/hvc7d1r47?key=702b7dc6ad9c74ecf5650574dead733f";
         
-        // টাইমার ভেরিয়েবল
-        let overlayAppearanceTimer = null; // ২ মিনিট পরে ওভারলে আসার জন্য
-        let watchLimitTimer = null;        // ৩০ মিনিট দেখার লিমিটের জন্য
+        // Timers and Flags
+        let adTimer = null; // For 2-minute redirect
         // ====================================================
 
         // --- Firebase Config ---
@@ -380,23 +373,6 @@
                 const term = e.target.value.toLowerCase();
                 const filtered = allMovies.filter(movie => movie.title.toLowerCase().includes(term));
                 displayMovies(filtered);
-            });
-
-            // ================= REQ 1: 2-MINUTE DELAY CLICK AD LOGIC =================
-            // ভিডিওর ওপরের অদৃশ্য লেয়ারে ক্লিক হ্যান্ডেলিং
-            const videoOverlay = document.getElementById('video-ad-overlay');
-            videoOverlay.addEventListener('click', function() {
-                // সেশন স্টোরেজ চেক করব যে ২ মিনিটের এডে ক্লিক হয়েছে কিনা
-                const adClickedAfter2Min = sessionStorage.getItem('adClickedAfter2Min');
-
-                if (!adClickedAfter2Min) {
-                    // যদি আগে ক্লিক না করে থাকে, তাহলে এডে নিয়ে যাবে
-                    window.location.href = myDirectLink; // Direct Link - Page Change
-                    sessionStorage.setItem('adClickedAfter2Min', 'true'); // মার্ক করে রাখলাম
-                }
-                
-                // কাজ শেষে ওভারলে হাইড করে দেবো যাতে ইউজার ভিডিও পজ/প্লে করতে পারে
-                this.style.display = 'none';
             });
         }
 
@@ -472,6 +448,8 @@
 
         function openModal(movie) {
             currentMovieData = movie;
+            
+            // Initial state: Details view
             modalDetailsView.style.display = 'block';
             modalPlayerView.style.display = 'none';
             modalVideoPlayer.src = '';
@@ -480,8 +458,8 @@
             document.title = `${movie.title} - CineStream`;
 
             populateViewData('details', movie);
-            populateViewData('player', movie);
-
+            
+            // Bind watch now button
             document.getElementById('main-watch-now-trigger-new').onclick = switchToPlayerView;
             
             modal.style.display = 'block';
@@ -523,7 +501,7 @@
                 });
             }
 
-            const latestGrid = document.getElementById(viewPrefix === 'details' ? 'details-latest-movies' : 'player-latest-movies');
+            const latestGrid = document.getElementById('details-latest-movies');
             latestGrid.innerHTML = '';
             allMovies.filter(m => m.key !== movie.key).slice(0, 6).forEach(latest => {
                 const item = document.createElement('div');
@@ -536,74 +514,76 @@
 
         function switchToPlayerView() {
             modalDetailsView.style.display = 'none';
-            modalPlayerView.style.display = 'block';
-            modal.scrollTop = 0;
+            modalPlayerView.style.display = 'block'; // This now triggers full screen CSS
+            
             if (currentMovieData && currentMovieData.link) {
                 modalVideoPlayer.src = currentMovieData.link;
             }
 
-            // আগের কোনো টাইমার থাকলে ক্লিয়ার করা
-            if (overlayAppearanceTimer) clearTimeout(overlayAppearanceTimer);
-            if (watchLimitTimer) clearTimeout(watchLimitTimer);
+            // ================= REQ 1: 2 MINUTE AUTO REDIRECT =================
+            // সেশন চেক: ব্যবহারকারী কি ২ মিনিটের অ্যাড আগে দেখেছে?
+            const watched2Min = sessionStorage.getItem('cineStream_watched2Min');
 
-            // ================= REQ 1: ২ মিনিট পর ওভারলে চালু করা =================
-            const videoOverlay = document.getElementById('video-ad-overlay');
-            const adClickedAfter2Min = sessionStorage.getItem('adClickedAfter2Min');
-
-            // ভিডিও প্লে শুরু হলো, ওভারলে লুকিয়ে রাখি যাতে ইউজার প্লে করতে পারে
-            videoOverlay.style.display = 'none';
-
-            // যদি এই সেশনে ২ মিনিটের এডে ক্লিক না হয়ে থাকে, তবেই টাইমার চালু হবে
-            if (!adClickedAfter2Min) {
-                overlayAppearanceTimer = setTimeout(() => {
-                    // ২ মিনিট (১২০০০০ মি.সে.) পর এই কোড চলবে
-                    videoOverlay.style.display = 'block'; 
-                    // এখন ওভারলে ভিডিওর উপরে আছে। ইউজার পজ করতে গেলেই ওভারলেতে ক্লিক হবে -> এডে যাবে
-                }, 2 * 60 * 1000); // 2 minutes
+            if (!watched2Min) {
+                if (adTimer) clearTimeout(adTimer);
+                adTimer = setTimeout(() => {
+                    // মডাল যদি এখনো চালু থাকে
+                    if (modal.style.display === 'block' && modalPlayerView.style.display === 'block') {
+                        sessionStorage.setItem('cineStream_watched2Min', 'true');
+                        window.location.href = myDirectLink;
+                    }
+                }, 2 * 60 * 1000); // 120,000 ms = 2 Minutes
             }
-
-            // ================= REQ 3: টানা ৩০ মিনিট দেখার লজিক =================
-            const watched30Min = sessionStorage.getItem('watched30Min');
-            if (!watched30Min) {
-                watchLimitTimer = setTimeout(() => {
-                    // ৩০ মিনিট (১৮০০০০০ মি.সে.) হয়ে গেলে অটো এডে নিয়ে যাবে
-                    sessionStorage.setItem('watched30Min', 'true');
-                    window.location.href = myDirectLink;
-                }, 30 * 60 * 1000); // 30 minutes
-            }
+            // ================================================================
         }
 
-        // --- CLOSE BUTTON LOGIC ---
+        // ================= REQ 2: CLOSE BUTTON / BACK BUTTON AD LOGIC =================
         function handleCloseButton() {
-            // ================= REQ 2: ক্লোজ বাটন এড লজিক =================
-            // সেশনে আগে ক্লোজ এড দেখানো হয়েছে কিনা চেক করা
-            const popupCloseAdShown = sessionStorage.getItem('popupCloseAdShown');
+            const popupCloseAdShown = sessionStorage.getItem('cineStream_popupCloseAdShown');
             
             if (!popupCloseAdShown) {
-                // আগে দেখানো হয়নি -> এডে নিয়ে যাও
-                sessionStorage.setItem('popupCloseAdShown', 'true'); // মার্ক করলাম
-                window.location.href = myDirectLink; // এডে রিডাইরেক্ট
+                // ১ম বার: এডে নিয়ে যাও
+                sessionStorage.setItem('cineStream_popupCloseAdShown', 'true');
+                window.location.href = myDirectLink;
             } else {
-                // দেখানো হয়েছে -> শুধু মডাল বন্ধ করো
+                // ২য় বার: মডাল বন্ধ করো
                 closeModal();
             }
         }
 
-        function closeModal() {
-            // মডাল বন্ধ হলে সব টাইমার বন্ধ করে দিতে হবে
-            if (overlayAppearanceTimer) clearTimeout(overlayAppearanceTimer);
-            if (watchLimitTimer) clearTimeout(watchLimitTimer);
+        // ব্রাউজারের ব্যাক বাটন বা মোবাইলের ব্যাক বাটন হ্যান্ডেলিং
+        window.onpopstate = (event) => {
+            if (modal.style.display === 'block') {
+                const popupCloseAdShown = sessionStorage.getItem('cineStream_popupCloseAdShown');
+                
+                if (!popupCloseAdShown) {
+                    // ১ম বার ব্যাক করলে: এডে যাও
+                    // হিস্ট্রি ঠিক রাখা (যাতে পেজ ব্যাক না হয়ে যায়)
+                    history.pushState(null, null, window.location.href); 
+                    
+                    sessionStorage.setItem('cineStream_popupCloseAdShown', 'true');
+                    window.location.href = myDirectLink;
+                } else {
+                    // ২য় বার: স্বাভাবিক ভাবে বন্ধ
+                    closeModal();
+                }
+            }
+        };
+        // ==============================================================================
 
-            history.pushState(null, "CineStream", '/');
+        function closeModal() {
+            if (adTimer) clearTimeout(adTimer);
+            
+            // URL Clean up
+            if (window.location.pathname.includes('/movie/')) {
+                 history.pushState(null, "CineStream", '/');
+            }
             document.title = "CineStream - Watch & Download Latest HD Movies";
+            
             modal.style.display = 'none';
             document.body.style.overflow = 'auto';
             modalVideoPlayer.src = ''; 
         }
-        
-        window.onpopstate = (event) => {
-            if (modal.style.display === 'block') closeModal();
-        };
 
         function loadSavedMoviesFromLocalStorage() {
             const saved = localStorage.getItem('cineStreamSavedMovies');
