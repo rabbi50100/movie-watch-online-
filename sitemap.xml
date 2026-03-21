@@ -1,52 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-   <!-- হোমপেজ (মেইন ওয়েবসাইট) -->
+   <!-- Home Page -->
    <url>
       <loc>https://movietd.netlify.app/</loc>
-      <lastmod>2026-01-24</lastmod>
       <changefreq>daily</changefreq>
       <priority>1.0</priority>
    </url>
-
-   <!-- মুভি ১: Saiyaara -->
+   
+   <!-- Example Movie Pages (আপনার আসল মুভির slug দিয়ে পরিবর্তন করুন) -->
    <url>
-      <loc>https://movietd.netlify.app/movie/saiyaara-movie</loc>
-      <lastmod>2026-01-24</lastmod>
+      <loc>https://movietd.netlify.app/movie/jack-movie-2025-2</loc>
       <changefreq>weekly</changefreq>
       <priority>0.8</priority>
    </url>
-
-   <!-- মুভি ২: Hit The Third Case -->
    <url>
-      <loc>https://movietd.netlify.app/movie/hitthe-third-case-2025</loc>
-      <lastmod>2026-01-24</lastmod>
+      <loc>https://movietd.netlify.app/movie/kis-kisko-pyaar-karoon-2</loc>
       <changefreq>weekly</changefreq>
       <priority>0.8</priority>
    </url>
-
-   <!-- মুভি ৩: Sankranthiki Vasthunam -->
-   <url>
-      <loc>https://movietd.netlify.app/movie/sankranthiki-vasthunam-2025</loc>
-      <lastmod>2026-01-24</lastmod>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-   </url>
-
-   <!-- মুভি ৪: Sweetheart -->
-   <url>
-      <loc>https://movietd.netlify.app/movie/sweetheart-</loc>
-      <lastmod>2026-01-24</lastmod>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-   </url>
-
-   <!-- মুভি ৫: Tu Meri Main Tera -->
-   <url>
-      <loc>https://movietd.netlify.app/movie/tu-meri-main-tera-main-tera-tu-meri</loc>
-      <lastmod>2026-01-24</lastmod>
-      <changefreq>weekly</changefreq>
-      <priority>0.8</priority>
-   </url>
-
 </urlset>
