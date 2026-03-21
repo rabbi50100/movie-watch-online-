@@ -54,16 +54,7 @@
             --footer-link-color: #ffffff;
             --footer-social-color: var(--primary-color);
         }
-        body {
-            font-family: var(--font-family);
-            background-color: var(--background-color);
-            color: var(--text-color);
-            margin: 0;
-            font-size: 16px;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+        body { font-family: var(--font-family); background-color: var(--background-color); color: var(--text-color); margin: 0; font-size: 16px; display: flex; flex-direction: column; min-height: 100vh; }
         *, *::before, *::after { box-sizing: border-box; }
 
         /* --- Loader --- */
@@ -110,8 +101,12 @@
         
         /* --- Movie Modal Style --- */
         #movie-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--dune-bg); z-index: 1001; display: none; overflow-y: auto; }
-        .modal-container { width: 100%; max-width: 500px; margin: 0 auto; color: var(--dune-text); }
+        .modal-container { width: 100%; max-width: 600px; margin: 0 auto; color: var(--dune-text); position: relative; background-color: var(--dune-bg); min-height: 100%; }
         
+        /* Close Button styling fixed for top-right */
+        .modal-close-btn { position: absolute; top: 15px; right: 15px; width: 35px; height: 35px; background-color: rgba(0, 0, 0, 0.7); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; z-index: 5001; }
+        .modal-close-btn:hover { background-color: rgba(255, 0, 0, 0.7); }
+
         .modal-content-container { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
         .modal-section h3 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; }
         hr.modal-separator { border: 0; height: 1px; background-color: var(--dune-separator); }
@@ -120,82 +115,28 @@
         .latest-movie-item { flex-shrink: 0; width: 100px; cursor: pointer; }
         .latest-movie-item img { width: 100%; border-radius: 8px; margin-bottom: 0.5rem; }
         
-        /* -- Details View -- */
-        #modal-details-view .poster-container { padding: 2.5rem 1.5rem 1.5rem; position: relative; }
-        #modal-details-view .poster-container img { width: 100%; max-width: 280px; height: auto; aspect-ratio: 2 / 3; object-fit: cover; border-radius: 12px; margin: 0 auto; display: block; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        #modal-details-view h1 { text-align: center; font-size: 2.5rem; font-weight: 700; }
-        #modal-details-view .meta-info { justify-content: center; display: flex; align-items: center; gap: 1rem; color: var(--dune-text-muted); font-size: 0.9rem; }
-        #modal-details-view .watch-now-btn { background-color: var(--dune-button-bg); color: white; font-weight: bold; padding: 1rem; border-radius: 2rem; border: none; cursor: pointer; }
-        .description-text { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
+        /* -- Details View / Player -- */
+        .media-container { width: 100%; background: #000; position: relative; }
+        
+        /* Poster View */
+        .poster-wrapper { padding: 2.5rem 1.5rem 1.5rem; display: flex; justify-content: center; }
+        .poster-wrapper img { width: 100%; max-width: 280px; height: auto; aspect-ratio: 2 / 3; object-fit: cover; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        
+        /* YouTube Style Player View (Hidden Initially) */
+        .video-wrapper { display: none; width: 100%; aspect-ratio: 16 / 9; background: #000; position: relative; }
+        .video-wrapper iframe { width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; }
+
+        h1 { text-align: center; font-size: 2rem; font-weight: 700; }
+        .meta-info { justify-content: center; display: flex; align-items: center; gap: 1rem; color: var(--dune-text-muted); font-size: 0.9rem; }
+        .watch-now-btn { background-color: var(--dune-button-bg); color: white; font-weight: bold; padding: 1rem; border-radius: 2rem; border: none; cursor: pointer; width: 100%; transition: background 0.3s; }
+        .watch-now-btn:hover { background-color: #2563eb; }
+        
+        .description-text { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; color: #ccc; line-height: 1.5; }
         .description-text.expanded { -webkit-line-clamp: unset; }
-        .read-more-btn { color: var(--dune-button-bg); cursor: pointer; font-weight: 500; display: none; }
+        .read-more-btn { color: var(--dune-button-bg); cursor: pointer; font-weight: 500; display: none; margin-top: 5px; }
 
-        /* 
-           =========================================================
-           FULL SCREEN PLAYER STYLES (100% Mobile Screen Fix)
-           =========================================================
-        */
-        #modal-player-view { 
-            display: none; 
-            /* Force this container to be an overlay */
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #000;
-            z-index: 5000; /* Highest Z-Index to cover everything */
-            margin: 0 !important;
-            max-width: none !important;
-        }
-
-        #modal-player-view .video-wrapper { 
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100vw;   /* Full Viewport Width */
-            height: 100vh;  /* Full Viewport Height */
-            background: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        #modal-player-view iframe { 
-            width: 100%; 
-            height: 100%; 
-            border: 0; 
-        }
-
-        /* Hide the details below player when in full screen mode to avoid scroll */
-        #modal-player-view .modal-content-container {
-            display: none; 
-        }
-
-        /* 
-           Close Button Style 
-           Enhanced visibility for full screen
-        */
-        .modal-close-btn { 
-            position: absolute; 
-            top: 20px; 
-            right: 20px; 
-            width: 40px; 
-            height: 40px; 
-            background-color: rgba(0, 0, 0, 0.6); 
-            border: 1px solid rgba(255,255,255,0.2);
-            color: white; 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 1.8rem; 
-            cursor: pointer; 
-            z-index: 5001; /* Above the video */
-        }
-        
-        .cast-container { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1rem; }
-        @media (max-width: 600px) { h1 { font-size: 2rem !important; } }
+        .cast-container { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1rem; color: #ccc; }
+        @media (max-width: 600px) { h1 { font-size: 1.8rem !important; } }
         
         /* --- Footer --- */
         footer { background-color: var(--footer-bg-color); color: var(--footer-text-color); padding: 20px 15px; text-align: center; margin-top: auto; }
@@ -239,15 +180,30 @@
         </div>
     </div>
     
-    <!-- MOVIE MODAL START -->
+    <!-- MOVIE MODAL (Unified View) -->
     <div id="movie-modal">
-        <!-- View 1: Details (Default) -->
-        <div id="modal-details-view" class="modal-container">
-            <div class="poster-container">
-                 <!-- Close button logic attached here -->
-                 <span class="modal-close-btn" onclick="handleCloseButton()">&times;</span>
-                 <img id="details-poster-img" alt="Movie poster" src="">
+        <div class="modal-container">
+            <span class="modal-close-btn" onclick="closeModal()">&times;</span>
+
+            <!-- Top Media Container (Holds either Poster or Video) -->
+            <div class="media-container">
+                <!-- Poster -->
+                <div class="poster-wrapper" id="modal-poster-wrapper">
+                    <img id="details-poster-img" alt="Movie poster" src="">
+                </div>
+                <!-- YouTube Style Video Player -->
+                <div class="video-wrapper" id="modal-video-wrapper">
+                    <iframe 
+                        id="modal-video-player" 
+                        src="" 
+                        title="Movie Player"
+                        allow="autoplay; fullscreen; encrypted-media" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
             </div>
+
+            <!-- Content Container -->
             <div class="modal-content-container">
                  <h1 id="details-title"></h1>
                  <div class="meta-info">
@@ -255,7 +211,10 @@
                      <span>•</span>
                      <span>IMDB <span id="details-rating"></span></span>
                  </div>
+                 
+                 <!-- Watch Now Button -->
                  <button id="main-watch-now-trigger-new" class="watch-now-btn">Watch Now</button>
+                 
                  <div>
                     <p id="details-description" class="description-text"></p>
                     <span id="details-read-more-btn" class="read-more-btn">Read More</span>
@@ -273,28 +232,6 @@
                  </div>
             </div>
         </div>
-
-        <!-- View 2: Player (FULL SCREEN) -->
-        <div id="modal-player-view">
-             <div class="video-wrapper">
-                <!-- Close button for player view (triggers Ad Logic) -->
-                <span class="modal-close-btn" onclick="handleCloseButton()">&times;</span>
-                
-                <iframe 
-                    id="modal-video-player" 
-                    src="" 
-                    loading="eager" 
-                    fetchpriority="high"
-                    title="Movie Player"
-                    allow="autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer" 
-                    allowfullscreen>
-                </iframe>
-             </div>
-             <!-- Info container hidden by CSS in player mode for full immersion -->
-             <div class="modal-content-container">
-                 <!-- Content hidden -->
-             </div>
-        </div>
     </div>
     <!-- MOVIE MODAL END -->
 
@@ -308,21 +245,19 @@
                 <li><a href="#">Privacy Policy</a></li>
             </ul>
         </nav>
-        <ul class="social-links">
-            <li><a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a></li>
-            <li><a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a></li>
-            <li><a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a></li>
-        </ul>
         <p class="footer-copyright">© <span id="current-year"></span> <span>CineStream</span>. All Rights Reserved.</p>
     </footer>
 
     <script>
-        // ================= AD CONFIGURATION =================
+        // ================= DIRECT LINK AD CONFIGURATION =================
+        // আপনার ডাইরেক্ট লিংকটি এখানে দেওয়া হলো
         const myDirectLink = "https://www.effectivegatecpm.com/hvc7d1r47?key=702b7dc6ad9c74ecf5650574dead733f";
         
-        // Timers and Flags
-        let adTimer = null; // For 2-minute redirect
-        // ====================================================
+        // অ্যাড খোলার ফাংশন (New Tab-এ ওপেন হবে, যাতে ব্যাক করলে লোডিং না নেয়)
+        function triggerAd() {
+            window.open(myDirectLink, '_blank');
+        }
+        // =================================================================
 
         // --- Firebase Config ---
         const firebaseConfig = {
@@ -340,9 +275,12 @@
         const loader = document.getElementById('loader');
         const movieGrid = document.getElementById('movie-grid');
         const modal = document.getElementById('movie-modal');
-        const modalDetailsView = document.getElementById('modal-details-view');
-        const modalPlayerView = document.getElementById('modal-player-view');
+        
+        // Views inside modal
+        const posterWrapper = document.getElementById('modal-poster-wrapper');
+        const videoWrapper = document.getElementById('modal-video-wrapper');
         const modalVideoPlayer = document.getElementById('modal-video-player');
+        const watchNowBtn = document.getElementById('main-watch-now-trigger-new');
         
         let allMovies = [];
         let savedMovieIds = new Set();
@@ -355,6 +293,14 @@
             setupEventListeners();
         });
         
+        // গ্লোবাল অ্যাড ট্র্যাকিং (যাতে ইউজারের বেশি বিরক্তি না লাগে, শুধু একবার করে অ্যাড দেখাবে)
+        document.body.addEventListener('click', () => {
+            if (!sessionStorage.getItem('first_click_ad')) {
+                sessionStorage.setItem('first_click_ad', 'true');
+                triggerAd();
+            }
+        }, { once: true }); // পুরো ওয়েবসাইটে প্রথম ক্লিকের জন্য
+
         function setupEventListeners() {
             const mainMenuToggle = document.getElementById('main-menu-toggle');
             const sideMenuOverlay = document.getElementById('side-menu-overlay');
@@ -416,9 +362,19 @@
                 const card = document.createElement('div');
                 card.className = 'movie-card';
                 card.innerHTML = `<div class="movie-poster-wrapper"><img src="${movie.image}" loading="lazy"><button class="save-button"><i class="${isSaved ? 'fas' : 'far'} fa-bookmark"></i></button><div class="rating-display"><i class="fas fa-star"></i> <span>${movie.rating}</span></div></div><h3>${movie.title}</h3>`;
+                
                 card.addEventListener('click', (e) => {
-                    if (e.target.closest('.save-button')) { e.stopPropagation(); toggleSaveMovie(movie.key, e.target.closest('.save-button')); } 
-                    else { openModal(movie); }
+                    if (e.target.closest('.save-button')) { 
+                        e.stopPropagation(); toggleSaveMovie(movie.key, e.target.closest('.save-button')); 
+                    } else { 
+                        // ================= AD LOGIC: On Movie Card Click =================
+                        if (!sessionStorage.getItem('movie_card_ad')) {
+                            sessionStorage.setItem('movie_card_ad', 'true');
+                            triggerAd(); // নতুন ট্যাবে অ্যাড ওপেন হবে
+                        }
+                        // একই সাথে পপ-আপ (Modal) ওপেন হয়ে যাবে বর্তমান ট্যাবে
+                        openModal(movie); 
+                    }
                 });
                 movieGrid.appendChild(card);
             });
@@ -449,37 +405,44 @@
         function openModal(movie) {
             currentMovieData = movie;
             
-            // Initial state: Details view
-            modalDetailsView.style.display = 'block';
-            modalPlayerView.style.display = 'none';
-            modalVideoPlayer.src = '';
+            // 초기 অবস্থা: ভিডিও লুকানো থাকবে, পোস্টার দেখাবে এবং Watch Now বাটন দেখাবে
+            posterWrapper.style.display = 'flex';
+            videoWrapper.style.display = 'none';
+            watchNowBtn.style.display = 'block';
+            modalVideoPlayer.src = ''; 
             
             history.pushState({ movieId: movie.key }, movie.title, `/movie/${movie.slug}`);
             document.title = `${movie.title} - CineStream`;
 
-            populateViewData('details', movie);
+            populateViewData(movie);
             
-            // Bind watch now button
-            document.getElementById('main-watch-now-trigger-new').onclick = switchToPlayerView;
+            // Watch Now Button Event
+            watchNowBtn.onclick = () => {
+                // ================= AD LOGIC: On Watch Now Click =================
+                if (!sessionStorage.getItem('watch_now_ad')) {
+                    sessionStorage.setItem('watch_now_ad', 'true');
+                    triggerAd(); // নতুন ট্যাবে অ্যাড ওপেন হবে
+                }
+                
+                // বর্তমান ট্যাবে ভিডিও প্লে হবে (YouTube এর মতো উপরে)
+                playVideoInModal();
+            };
             
             modal.style.display = 'block';
             modal.scrollTop = 0;
-            document.body.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden'; // পেজের স্ক্রল বন্ধ
         }
         
-        function populateViewData(viewPrefix, movie) {
+        function populateViewData(movie) {
             const releaseYear = movie.releaseDate ? movie.releaseDate.substring(0, 4) : 'N/A';
-            document.getElementById(`${viewPrefix}-title`).textContent = movie.title;
-            document.getElementById(`${viewPrefix}-meta-year`).innerHTML = `<i class="fa-solid fa-masks-theater"></i> ${movie.category} (${releaseYear})`;
-            document.getElementById(`${viewPrefix}-rating`).textContent = movie.rating || 'N/A';
-            document.getElementById(`${viewPrefix}-director`).textContent = `Director: ${movie.director || 'N/A'}`;
-            
-            if (viewPrefix === 'details') {
-                document.getElementById('details-poster-img').src = movie.image;
-            }
+            document.getElementById(`details-title`).textContent = movie.title;
+            document.getElementById(`details-meta-year`).innerHTML = `<i class="fa-solid fa-masks-theater"></i> ${movie.category} (${releaseYear})`;
+            document.getElementById(`details-rating`).textContent = movie.rating || 'N/A';
+            document.getElementById(`details-director`).textContent = `Director: ${movie.director || 'N/A'}`;
+            document.getElementById('details-poster-img').src = movie.image;
 
-            const descP = document.getElementById(`${viewPrefix}-description`);
-            const readMoreBtn = document.getElementById(`${viewPrefix}-read-more-btn`);
+            const descP = document.getElementById(`details-description`);
+            const readMoreBtn = document.getElementById(`details-read-more-btn`);
             descP.textContent = movie.description || 'No description available.';
             descP.classList.remove('expanded');
             readMoreBtn.style.display = 'none';
@@ -493,7 +456,7 @@
                 readMoreBtn.style.display = 'none';
             };
             
-            const castContainer = document.getElementById(`${viewPrefix}-cast-container`);
+            const castContainer = document.getElementById(`details-cast-container`);
             castContainer.innerHTML = '';
             if(movie.cast) {
                 movie.cast.split(',').forEach(actor => {
@@ -507,73 +470,29 @@
                 const item = document.createElement('div');
                 item.className = 'latest-movie-item';
                 item.innerHTML = `<img src="${latest.image}" alt="${latest.title}"><p>${latest.title}</p>`;
-                item.onclick = () => openModal(latest);
+                item.onclick = () => {
+                    // নিচের মুভিতে ক্লিক করলেও স্ক্রল টপে যাবে এবং নতুন মুভি লোড হবে
+                    modal.scrollTop = 0;
+                    openModal(latest);
+                };
                 latestGrid.appendChild(item);
             });
         }
 
-        function switchToPlayerView() {
-            modalDetailsView.style.display = 'none';
-            modalPlayerView.style.display = 'block'; // This now triggers full screen CSS
+        // ================= Requirement 1: YouTube Style Player =================
+        function playVideoInModal() {
+            // পোস্টার লুকিয়ে ভিডিও দেখাবে
+            posterWrapper.style.display = 'none';
+            watchNowBtn.style.display = 'none'; // প্লে বাটন লুকিয়ে ফেলবে
+            videoWrapper.style.display = 'block'; 
             
             if (currentMovieData && currentMovieData.link) {
-                modalVideoPlayer.src = currentMovieData.link;
-            }
-
-            // ================= REQ 1: 2 MINUTE AUTO REDIRECT =================
-            // সেশন চেক: ব্যবহারকারী কি ২ মিনিটের অ্যাড আগে দেখেছে?
-            const watched2Min = sessionStorage.getItem('cineStream_watched2Min');
-
-            if (!watched2Min) {
-                if (adTimer) clearTimeout(adTimer);
-                adTimer = setTimeout(() => {
-                    // মডাল যদি এখনো চালু থাকে
-                    if (modal.style.display === 'block' && modalPlayerView.style.display === 'block') {
-                        sessionStorage.setItem('cineStream_watched2Min', 'true');
-                        window.location.href = myDirectLink;
-                    }
-                }, 2 * 60 * 1000); // 120,000 ms = 2 Minutes
-            }
-            // ================================================================
-        }
-
-        // ================= REQ 2: CLOSE BUTTON / BACK BUTTON AD LOGIC =================
-        function handleCloseButton() {
-            const popupCloseAdShown = sessionStorage.getItem('cineStream_popupCloseAdShown');
-            
-            if (!popupCloseAdShown) {
-                // ১ম বার: এডে নিয়ে যাও
-                sessionStorage.setItem('cineStream_popupCloseAdShown', 'true');
-                window.location.href = myDirectLink;
-            } else {
-                // ২য় বার: মডাল বন্ধ করো
-                closeModal();
+                // ভিডিওর লিংকে ?autoplay=1 যোগ করে দেওয়া যায় যাতে অটো প্লে হয়
+                modalVideoPlayer.src = currentMovieData.link; 
             }
         }
-
-        // ব্রাউজারের ব্যাক বাটন বা মোবাইলের ব্যাক বাটন হ্যান্ডেলিং
-        window.onpopstate = (event) => {
-            if (modal.style.display === 'block') {
-                const popupCloseAdShown = sessionStorage.getItem('cineStream_popupCloseAdShown');
-                
-                if (!popupCloseAdShown) {
-                    // ১ম বার ব্যাক করলে: এডে যাও
-                    // হিস্ট্রি ঠিক রাখা (যাতে পেজ ব্যাক না হয়ে যায়)
-                    history.pushState(null, null, window.location.href); 
-                    
-                    sessionStorage.setItem('cineStream_popupCloseAdShown', 'true');
-                    window.location.href = myDirectLink;
-                } else {
-                    // ২য় বার: স্বাভাবিক ভাবে বন্ধ
-                    closeModal();
-                }
-            }
-        };
-        // ==============================================================================
 
         function closeModal() {
-            if (adTimer) clearTimeout(adTimer);
-            
             // URL Clean up
             if (window.location.pathname.includes('/movie/')) {
                  history.pushState(null, "CineStream", '/');
@@ -581,9 +500,21 @@
             document.title = "CineStream - Watch & Download Latest HD Movies";
             
             modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-            modalVideoPlayer.src = ''; 
+            document.body.style.overflow = 'auto'; // পেজের স্ক্রল চালু
+            modalVideoPlayer.src = ''; // ভিডিও স্টপ করা
+            
+            // পপ-আপ বন্ধ করলে আবার আগের অবস্থায় ফিরিয়ে নেওয়া (পরের বার ওপেন করার জন্য)
+            posterWrapper.style.display = 'flex';
+            videoWrapper.style.display = 'none';
+            watchNowBtn.style.display = 'block';
         }
+
+        // ব্রাউজারের ব্যাক বাটন হ্যান্ডেলিং
+        window.onpopstate = (event) => {
+            if (modal.style.display === 'block') {
+                closeModal(); // ব্যাক বাটনে চাপলে পপ-আপ বন্ধ হয়ে যাবে
+            }
+        };
 
         function loadSavedMoviesFromLocalStorage() {
             const saved = localStorage.getItem('cineStreamSavedMovies');
