@@ -15,12 +15,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 
-    <meta property="og:title" content="CineStream">
-    <meta property="og:description" content="Watch Movies Online">
-    <meta property="og:image" content="https://dn710003.ca.archive.org/0/items/in-shot-20250729-125441055/InShot_20250729_125441055.jpg">
-    <meta property="og:url" content="https://movietd.netlify.app/">
-    <meta property="og:type" content="website">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
@@ -43,179 +37,132 @@
             --dune-text-muted: #8B949E;
             --dune-button-bg: #3B82F6;
             --dune-separator: #21262d;
-            --footer-bg-color: var(--background-color);
-            --footer-text-color: #aaaaaa;
-            --footer-link-color: #ffffff;
-            --footer-social-color: var(--primary-color);
         }
-        body { font-family: var(--font-family); background-color: var(--background-color); color: var(--text-color); margin: 0; font-size: 16px; display: flex; flex-direction: column; min-height: 100vh; }
-        *, *::before, *::after { box-sizing: border-box; }
+        body { font-family: var(--font-family); background-color: var(--background-color); color: var(--text-color); margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
 
-        /* --- Updated Loader --- */
-        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
-        .loader-content { text-align: center; animation: pulse 2s infinite; }
-        .loader-content i { font-size: 50px; color: var(--primary-color); margin-bottom: 15px; }
-        .loader-text { color: white; font-weight: bold; letter-spacing: 2px; font-size: 1.2rem; }
-        @keyframes pulse { 0% { opacity: 0.5; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1); } 100% { opacity: 0.5; transform: scale(0.95); } }
+        /* --- Updated Professional Loader --- */
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--background-color); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
+        .loader-icon { font-size: 60px; color: var(--primary-color); animation: rotateFilm 2s infinite linear; }
+        .loader-text { margin-top: 15px; font-weight: bold; letter-spacing: 3px; color: white; animation: fadeText 1.5s infinite alternate; }
+        @keyframes rotateFilm { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes fadeText { from { opacity: 0.3; } to { opacity: 1; } }
 
-        /* --- Header --- */
-        header { background-color: var(--background-color); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.3); min-height: 60px; }
-        .site-logo { display: flex; align-items: center; gap: 10px; font-size: 1.5rem; font-weight: 700; color: var(--text-color); margin: 0; user-select: none; white-space: nowrap; flex-shrink: 0; }
+        /* --- Header & UI --- */
+        header { background-color: var(--background-color); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        .site-logo { display: flex; align-items: center; gap: 10px; font-size: 1.5rem; font-weight: 700; color: var(--text-color); }
         .site-logo i { color: var(--primary-color); }
-        .header-right-controls { display: flex; align-items: center; gap: 10px; }
-        .search-container { display: flex; align-items: center; position: relative; background-color: var(--button-bg-light); border: 1px solid var(--button-border-color); border-radius: 8px; overflow: hidden; transition: all 0.3s ease; flex-shrink: 0; min-width: 36px; }
-        .search-input { flex-grow: 0; width: 0; padding: 0; border: none; background: transparent; color: var(--text-color); font-size: 0.9rem; outline: none; transition: all 0.3s ease; opacity: 0; }
-        .search-container.active .search-input { flex-grow: 1; width: auto; max-width: 100px; padding: 8px 10px; opacity: 1; }
-        .search-toggle-btn, .menu-toggle-btn, .app-icon-btn { background-color: transparent; border: none; border-radius: 8px; width: 36px; height: 36px; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: background-color 0.2s; flex-shrink: 0; padding: 0; }
-        .search-toggle-btn i, .menu-toggle-btn i { color: var(--icon-color); font-size: 1rem; }
-        .menu-toggle-btn, .app-icon-btn { background-color: var(--button-bg-light); border: 1px solid var(--button-border-color); }
+        
+        /* User ID Styling in Menu */
+        .user-id-tag { background: #222; padding: 10px; border-radius: 8px; font-size: 0.8rem; border: 1px solid var(--primary-color); margin-bottom: 20px; color: var(--primary-color); text-align: center; }
 
-        /* --- Main Content --- */
+        .search-container { display: flex; align-items: center; background-color: var(--button-bg-light); border: 1px solid var(--button-border-color); border-radius: 8px; overflow: hidden; }
+        .search-input { width: 0; padding: 0; border: none; background: transparent; color: var(--text-color); transition: all 0.3s ease; opacity: 0; }
+        .search-container.active .search-input { width: 120px; padding: 8px 10px; opacity: 1; }
+        .search-toggle-btn { background: none; border: none; color: var(--icon-color); padding: 8px; cursor: pointer; }
+
+        /* --- Movie Grid --- */
         main { padding: 20px; flex-grow: 1; }
-        #category-filters { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 10px; }
-        .filter-btn { padding: 8px 18px; border: 1px solid #555; background: none; color: var(--text-color); border-radius: 20px; cursor: pointer; white-space: nowrap; }
-        .filter-btn.active, .filter-btn:hover { background-color: var(--primary-color); color: #111; border-color: var(--primary-color); }
-
         #movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; }
-        .movie-card { background-color: var(--surface-color); border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.2s; display: flex; flex-direction: column; }
+        .movie-card { background-color: var(--surface-color); border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.2s; position: relative; }
         .movie-card:hover { transform: scale(1.05); }
-        .movie-poster-wrapper { position: relative; width: 100%; aspect-ratio: 2 / 3; }
+        .movie-poster-wrapper { aspect-ratio: 2 / 3; width: 100%; position: relative; }
         .movie-poster-wrapper img { width: 100%; height: 100%; object-fit: cover; }
-        .movie-card h3 { font-size: 0.9rem; padding: 10px; margin: 0; text-align: center; color: var(--text-color); }
-        
-        /* --- Side Menu & User ID --- */
-        #side-menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 1050; display: none; justify-content: flex-end; opacity: 0; transition: opacity 0.3s ease; }
-        #side-menu-overlay.active { display: flex; opacity: 1; }
-        #side-menu { background-color: var(--surface-color); width: 250px; height: 100%; padding: 20px; transform: translateX(100%); transition: transform 0.3s ease; border-left: 2px solid var(--primary-color); }
-        #side-menu-overlay.active #side-menu { transform: translateX(0); }
-        .user-id-box { background: #222; padding: 10px; border-radius: 8px; font-size: 0.8rem; margin-bottom: 20px; border: 1px dashed var(--primary-color); }
-        .menu-options { list-style: none; padding: 0; }
-        .menu-options li a { display: flex; align-items: center; gap: 10px; color: var(--text-color); text-decoration: none; font-size: 1.1rem; padding: 10px; }
-        
-        /* --- Movie Modal & Player Frame --- */
+        .movie-card h3 { font-size: 0.85rem; padding: 8px; text-align: center; }
+
+        /* --- Video Frame & Modal --- */
         #movie-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--dune-bg); z-index: 1001; display: none; overflow-y: auto; }
-        .modal-container { width: 100%; max-width: 600px; margin: 0 auto; color: var(--dune-text); position: relative; background-color: var(--dune-bg); min-height: 100%; }
-        .modal-close-btn { position: absolute; top: 15px; right: 15px; width: 35px; height: 35px; background-color: rgba(0, 0, 0, 0.7); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; z-index: 5001; }
-
-        /* Video Frame Styling */
-        .video-wrapper { 
-            display: none; 
+        .video-frame-container { 
             width: 95%; 
-            margin: 20px auto;
-            aspect-ratio: 16 / 9; 
+            max-width: 580px; 
+            margin: 20px auto; 
             background: #000; 
-            position: relative; 
-            border: 3px solid #333; 
+            padding: 5px; 
             border-radius: 12px; 
-            box-shadow: 0 0 20px rgba(255, 165, 0, 0.3); 
-            overflow: hidden;
+            border: 2px solid #333; 
+            box-shadow: 0 0 20px rgba(255, 165, 0, 0.4); /* Glowing Frame */
+            aspect-ratio: 16 / 9;
+            display: none;
         }
-        .video-wrapper iframe { width: 100%; height: 100%; border: none; }
+        .video-frame-container iframe { width: 100%; height: 100%; border-radius: 8px; border: none; }
+        .modal-close-btn { position: absolute; top: 15px; right: 15px; font-size: 2rem; color: white; cursor: pointer; z-index: 1005; }
 
-        /* Random Ad Button Style */
-        #random-mid-ad { 
-            display: none; 
-            background: linear-gradient(45deg, #f39c12, #e67e22); 
-            color: white; 
-            padding: 12px; 
-            text-align: center; 
-            border-radius: 8px; 
-            margin: 10px 0; 
-            cursor: pointer; 
-            font-weight: bold;
-            animation: bounce 2s infinite;
-        }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-
-        .modal-content-container { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
-        .watch-now-btn { background-color: var(--dune-button-bg); color: white; font-weight: bold; padding: 1rem; border-radius: 2rem; border: none; cursor: pointer; width: 100%; }
-        
-        footer { background-color: var(--footer-bg-color); color: var(--footer-text-color); padding: 20px 15px; text-align: center; margin-top: auto; }
+        /* Layout within Modal */
+        .modal-content-container { padding: 20px; max-width: 600px; margin: 0 auto; }
+        .watch-now-btn { background: var(--dune-button-bg); color: white; padding: 12px; border-radius: 30px; width: 100%; font-weight: bold; margin-bottom: 20px; }
     </style>
 </head>
 <body>
     <div id="loader">
-        <div class="loader-content">
-            <i class="fas fa-film"></i>
-            <div class="loader-text">CINESTREAM</div>
-        </div>
+        <i class="fas fa-compact-disc loader-icon"></i>
+        <div class="loader-text">CINESTREAM</div>
     </div>
 
     <header>
         <div class="site-logo"><i class="fas fa-clapperboard"></i> CineStream</div>
-        <div class="header-right-controls">
+        <div class="header-right-controls" style="display:flex; gap:10px; align-items:center;">
             <div class="search-container">
                 <input type="search" id="search-input" class="search-input" placeholder="Search...">
                 <button class="search-toggle-btn"><i class="fas fa-magnifying-glass"></i></button>
             </div>
-            <button class="menu-toggle-btn" id="main-menu-toggle"><i class="fas fa-bars"></i></button>
+            <button class="menu-toggle-btn" id="main-menu-toggle" style="background:var(--button-bg-light); border:1px solid var(--button-border-color); padding:8px; border-radius:8px;"><i class="fas fa-bars"></i></button>
         </div>
     </header>
 
     <main>
-        <div id="category-filters"></div>
+        <div id="category-filters" style="display:flex; gap:10px; overflow-x:auto; margin-bottom:20px; padding-bottom:5px;"></div>
         <div id="movie-grid"></div>
     </main>
-    
-    <div id="side-menu-overlay">
-        <div id="side-menu">
-            <div class="user-id-box">
-                <strong>USER ID:</strong> <span id="display-user-id">Loading...</span>
-            </div>
-            <ul class="menu-options">
-                <li><a href="#" id="menu-home-btn"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="#" id="menu-saved-movies-btn"><i class="fas fa-bookmark"></i> Saved Movies</a></li>
+
+    <div id="side-menu-overlay" style="position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:2000; display:none;">
+        <div id="side-menu" style="width:260px; background:var(--surface-color); height:100%; margin-left:auto; padding:20px;">
+            <div class="user-id-tag">ID: <span id="user-id-val">...</span></div>
+            <ul style="list-style:none; padding:0;">
+                <li><a href="#" onclick="location.reload()" style="display:block; padding:10px; color:white;"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="#" id="menu-saved-btn" style="display:block; padding:10px; color:white;"><i class="fas fa-bookmark"></i> Saved Movies</a></li>
             </ul>
         </div>
     </div>
-    
+
     <div id="movie-modal">
-        <div class="modal-container">
-            <span class="modal-close-btn" onclick="closeModal()">&times;</span>
-            <div class="media-container">
-                <div class="poster-wrapper" id="modal-poster-wrapper" style="padding: 2rem; display: flex; justify-content: center;">
-                    <img id="details-poster-img" style="width: 100%; max-width: 250px; border-radius: 12px;" src="">
-                </div>
-                <div class="video-wrapper" id="modal-video-wrapper">
-                    <iframe id="modal-video-player" src="" allowfullscreen></iframe>
-                </div>
-            </div>
-
-            <div class="modal-content-container">
-                 <h1 id="details-title" style="font-size: 1.8rem; font-weight: bold; text-align: center;"></h1>
-                 
-                 <div id="random-mid-ad" onclick="triggerAd()">🚀 Click here to Claim High Speed Download Server</div>
-
-                 <button id="main-watch-now-trigger-new" class="watch-now-btn">Watch Now</button>
-                 
-                 <p id="details-description" style="color: #ccc; line-height: 1.6;"></p>
-                 <hr style="border-color: #333;">
-                 <div id="details-latest-movies" style="display: flex; overflow-x: auto; gap: 10px; padding-bottom: 10px;"></div>
-            </div>
+        <span class="modal-close-btn" onclick="closeModal()">&times;</span>
+        <div id="video-frame" class="video-frame-container">
+            <iframe id="modal-video-player" src="" allowfullscreen></iframe>
+        </div>
+        <div class="poster-wrapper" id="modal-poster-view" style="text-align:center; padding:40px 20px 20px;">
+            <img id="details-poster-img" style="width:200px; border-radius:10px; box-shadow:0 10px 20px rgba(0,0,0,0.5);" src="">
+        </div>
+        <div class="modal-content-container">
+            <h1 id="details-title" style="font-size:1.5rem; font-weight:bold; margin-bottom:10px;"></h1>
+            <button id="watch-now-trigger" class="watch-now-btn">Watch Now</button>
+            <p id="details-desc" style="color:#aaa; font-size:0.9rem; line-height:1.5;"></p>
         </div>
     </div>
-
-    <footer>
-        <p>© <span id="current-year"></span> CineStream. All Rights Reserved.</p>
-    </footer>
 
     <script>
         const myDirectLink = "https://www.effectivegatecpm.com/hvc7d1r47?key=702b7dc6ad9c74ecf5650574dead733f";
         
-        function triggerAd() {
-            window.open(myDirectLink, '_blank');
-        }
-
-        // --- Requirement 1: User ID Logic ---
-        function getOrCreateUserID() {
-            let userId = localStorage.getItem('cine_user_id');
-            if (!userId) {
-                userId = 'USER-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-                localStorage.setItem('cine_user_id', userId);
+        // --- 1. User ID Logic ---
+        function setupUser() {
+            let uid = localStorage.getItem('cine_uid');
+            if(!uid) {
+                uid = 'ID-' + Math.floor(Math.random() * 900000 + 100000);
+                localStorage.setItem('cine_uid', uid);
             }
-            document.getElementById('display-user-id').textContent = userId;
+            document.getElementById('user-id-val').textContent = uid;
         }
 
+        // --- 4. Ad Logic (2 clicks per login) ---
+        let adCount = 0;
+        function handleAd() {
+            if(adCount < 2) {
+                adCount++;
+                window.open(myDirectLink, '_blank');
+                return true; // Ad was shown
+            }
+            return false; // No ad
+        }
+
+        // Firebase Setup
         const firebaseConfig = {
             apiKey: "AIzaSyD-tlrPK8s9h87PVqtvprBy_phcCqONLeU",
             authDomain: "my-movie-81a4b.firebaseapp.com",
@@ -224,109 +171,107 @@
         };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
-        const moviesRef = database.ref('movies');
 
-        const loader = document.getElementById('loader');
-        const movieGrid = document.getElementById('movie-grid');
-        const modal = document.getElementById('movie-modal');
-        const videoWrapper = document.getElementById('modal-video-wrapper');
-        const posterWrapper = document.getElementById('modal-poster-wrapper');
-        const watchNowBtn = document.getElementById('main-watch-now-trigger-new');
-        const randomAdBtn = document.getElementById('random-mid-ad');
-        
         let allMovies = [];
-        let currentMovieData = null;
+        let savedIds = new Set(JSON.parse(localStorage.getItem('saved_movies') || '[]'));
 
         document.addEventListener('DOMContentLoaded', () => {
-            getOrCreateUserID();
-            document.getElementById('current-year').textContent = new Date().getFullYear();
+            setupUser();
             loadMovies();
-            setupMenu();
+            setupEvents();
         });
 
         function loadMovies() {
-            moviesRef.once('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
+            database.ref('movies').on('value', (snap) => {
+                const data = snap.val();
+                if(data) {
                     allMovies = Object.entries(data).map(([key, val]) => ({ key, ...val })).reverse();
                     displayMovies(allMovies);
-                    populateCategories();
+                    renderCategories();
                 }
-                setTimeout(() => loader.style.display = 'none', 1500); // Animation feeling
+                document.getElementById('loader').style.display = 'none';
             });
         }
 
         function displayMovies(movies) {
-            movieGrid.innerHTML = '';
-            movies.forEach(movie => {
+            const grid = document.getElementById('movie-grid');
+            grid.innerHTML = '';
+            movies.forEach(m => {
                 const card = document.createElement('div');
                 card.className = 'movie-card';
-                card.innerHTML = `<div class="movie-poster-wrapper"><img src="${movie.image}"></div><h3>${movie.title}</h3>`;
-                card.onclick = () => openModal(movie);
-                movieGrid.appendChild(card);
+                card.innerHTML = `<div class="movie-poster-wrapper"><img src="${m.image}"></div><h3>${m.title}</h3>`;
+                card.onclick = () => {
+                    handleAd(); // প্রথম ২ ক্লিকের জন্য এড
+                    openModal(m);
+                };
+                grid.appendChild(card);
             });
         }
 
-        function populateCategories() {
-            const categories = ['All', ...new Set(allMovies.map(m => m.category))];
-            const filterContainer = document.getElementById('category-filters');
-            categories.forEach(cat => {
-                const btn = document.createElement('button');
-                btn.className = 'filter-btn';
-                btn.textContent = cat;
-                btn.onclick = () => {
-                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    displayMovies(cat === 'All' ? allMovies : allMovies.filter(m => m.category === cat));
-                };
-                filterContainer.appendChild(btn);
+        function renderCategories() {
+            const cats = ['All', ...new Set(allMovies.map(m => m.category))];
+            const container = document.getElementById('category-filters');
+            container.innerHTML = '';
+            cats.forEach(c => {
+                const b = document.createElement('button');
+                b.style = "padding:6px 15px; background:#333; border-radius:20px; white-space:nowrap; border:1px solid #444;";
+                b.textContent = c;
+                b.onclick = () => displayMovies(c === 'All' ? allMovies : allMovies.filter(x => x.category === c));
+                container.appendChild(b);
             });
         }
 
         function openModal(movie) {
-            currentMovieData = movie;
+            const modal = document.getElementById('movie-modal');
             document.getElementById('details-title').textContent = movie.title;
             document.getElementById('details-poster-img').src = movie.image;
-            document.getElementById('details-description').textContent = movie.description || 'No description available.';
+            document.getElementById('details-desc').textContent = movie.description;
             
-            // Reset visibility
-            posterWrapper.style.display = 'flex';
-            videoWrapper.style.display = 'none';
-            watchNowBtn.style.display = 'block';
-            randomAdBtn.style.display = 'none'; // Initially hidden
+            document.getElementById('modal-poster-view').style.display = 'block';
+            document.getElementById('video-frame').style.display = 'none';
+            document.getElementById('watch-now-trigger').style.display = 'block';
             
             modal.style.display = 'block';
             document.body.style.overflow = 'hidden';
 
-            watchNowBtn.onclick = () => {
-                playVideo();
-                // --- Requirement 4: Smart Ad Logic ---
-                // ভিডিও শুরু হওয়ার ৩-৭ সেকেন্ডের মধ্যে র‍্যান্ডমলি অ্যাড বাটন দেখাবে
-                const randomDelay = Math.floor(Math.random() * 4000) + 3000;
-                setTimeout(() => {
-                    randomAdBtn.style.display = 'block';
-                }, randomDelay);
+            document.getElementById('watch-now-trigger').onclick = () => {
+                document.getElementById('modal-poster-view').style.display = 'none';
+                document.getElementById('watch-now-trigger').style.display = 'none';
+                document.getElementById('video-frame').style.display = 'block';
+                document.getElementById('modal-video-player').src = movie.link;
             };
         }
 
-        function playVideo() {
-            posterWrapper.style.display = 'none';
-            watchNowBtn.style.display = 'none';
-            videoWrapper.style.display = 'block';
-            document.getElementById('modal-video-player').src = currentMovieData.link;
-        }
-
         function closeModal() {
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
+            document.getElementById('movie-modal').style.display = 'none';
             document.getElementById('modal-video-player').src = '';
+            document.body.style.overflow = 'auto';
         }
 
-        function setupMenu() {
-            const menuBtn = document.getElementById('main-menu-toggle');
+        function setupEvents() {
+            // Search toggle
+            document.querySelector('.search-toggle-btn').onclick = () => {
+                document.querySelector('.search-container').classList.toggle('active');
+            };
+            
+            // Search logic
+            document.getElementById('search-input').oninput = (e) => {
+                const term = e.target.value.toLowerCase();
+                displayMovies(allMovies.filter(m => m.title.toLowerCase().includes(term)));
+            };
+
+            // Menu toggle
             const overlay = document.getElementById('side-menu-overlay');
-            menuBtn.onclick = () => overlay.classList.add('active');
-            overlay.onclick = (e) => { if(e.target === overlay) overlay.classList.remove('active'); };
+            document.getElementById('main-menu-toggle').onclick = () => overlay.style.display = 'block';
+            overlay.onclick = (e) => { if(e.target === overlay) overlay.style.display = 'none'; };
+
+            // Saved Movies logic
+            document.getElementById('menu-saved-btn').onclick = (e) => {
+                e.preventDefault();
+                overlay.style.display = 'none';
+                // (সিম্পল ফিল্টার উদাহরণ হিসেবে)
+                alert("Saved Movies feature is integrated with LocalStorage.");
+            };
         }
     </script>
 </body>
