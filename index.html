@@ -5,33 +5,16 @@
     <script async>(function(d,z,s){s.src='https://'+d+'/401/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('groleegni.net',9704632,document.createElement('script'))</script>
     <meta charset="UTF-8">
 
-    <!-- ================= SEO Tags ================= -->
     <title id="page-title">CineStream - Watch & Download Latest HD Movies</title>
-    <meta name="description" id="meta-description" content="Watch your favorite new and classic movies and web series.">
-    <meta name="keywords" id="meta-keywords" content="movies, web series, watch online, stream movies">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" id="canonical-url" href="https://movietd.netlify.app/">
-
-    <!-- Speed Optimization -->
-    <link rel="preconnect" href="https://www.gstatic.com">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-
-    <!-- Open Graph -->
-    <meta property="og:title" content="CineStream">
-    <meta property="og:description" content="Watch Movies Online">
-    <meta property="og:image" content="https://dn710003.ca.archive.org/0/items/in-shot-20250729-125441055/InShot_20250729_125441055.jpg">
-    <meta property="og:url" content="https://movietd.netlify.app/">
-    <meta property="og:type" content="website">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+    
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
-    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
     <style>
@@ -49,104 +32,56 @@
             --dune-text-muted: #8B949E;
             --dune-button-bg: #3B82F6;
             --dune-separator: #21262d;
-            --footer-bg-color: var(--background-color);
-            --footer-text-color: #aaaaaa;
-            --footer-link-color: #ffffff;
-            --footer-social-color: var(--primary-color);
         }
-        body { font-family: var(--font-family); background-color: var(--background-color); color: var(--text-color); margin: 0; font-size: 16px; display: flex; flex-direction: column; min-height: 100vh; }
-        *, *::before, *::after { box-sizing: border-box; }
-
+        body { font-family: var(--font-family); background-color: var(--background-color); color: var(--text-color); margin: 0; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+        
         /* --- Loader --- */
         #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--background-color); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
         .spinner { border: 6px solid #f3f3f330; border-top: 6px solid var(--primary-color); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         /* --- Header --- */
-        header { background-color: var(--background-color); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.3); min-height: 60px; }
-        .site-logo { display: flex; align-items: center; gap: 10px; font-size: 1.5rem; font-weight: 700; color: var(--text-color); margin: 0; user-select: none; white-space: nowrap; flex-shrink: 0; }
+        header { background-color: var(--background-color); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        .site-logo { display: flex; align-items: center; gap: 10px; font-size: 1.5rem; font-weight: 700; color: var(--text-color); }
         .site-logo i { color: var(--primary-color); }
-        .header-right-controls { display: flex; align-items: center; gap: 10px; }
-        .search-container { display: flex; align-items: center; position: relative; background-color: var(--button-bg-light); border: 1px solid var(--button-border-color); border-radius: 8px; overflow: hidden; transition: all 0.3s ease; flex-shrink: 0; min-width: 36px; }
-        .search-input { flex-grow: 0; width: 0; padding: 0; border: none; background: transparent; color: var(--text-color); font-size: 0.9rem; outline: none; transition: all 0.3s ease; opacity: 0; }
-        .search-container.active .search-input { flex-grow: 1; width: auto; max-width: 100px; padding: 8px 10px; opacity: 1; }
-        .search-toggle-btn, .menu-toggle-btn, .app-icon-btn { background-color: transparent; border: none; border-radius: 8px; width: 36px; height: 36px; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: background-color 0.2s; flex-shrink: 0; padding: 0; }
-        .search-toggle-btn:hover, .menu-toggle-btn:hover, .app-icon-btn:hover { background-color: rgba(255,255,255,0.08); }
-        .search-toggle-btn i, .menu-toggle-btn i { color: var(--icon-color); font-size: 1rem; }
-        .menu-toggle-btn, .app-icon-btn { background-color: var(--button-bg-light); border: 1px solid var(--button-border-color); }
-        .app-icon-btn .app-icon-img { width: 100%; height: 100%; object-fit: contain; display: block; border-radius: 6px; }
+        .search-container { display: flex; align-items: center; background-color: var(--button-bg-light); border: 1px solid var(--button-border-color); border-radius: 8px; overflow: hidden; transition: 0.3s; }
+        .search-input { width: 0; padding: 0; border: none; background: transparent; color: white; outline: none; transition: 0.3s; opacity: 0; }
+        .search-container.active .search-input { width: 120px; padding: 8px 10px; opacity: 1; }
+        .search-toggle-btn, .menu-toggle-btn, .app-icon-btn { background: var(--button-bg-light); border: 1px solid var(--button-border-color); border-radius: 8px; width: 36px; height: 36px; color: var(--icon-color); cursor: pointer; display: flex; justify-content: center; align-items: center; }
 
         /* --- Main Content --- */
         main { padding: 20px; flex-grow: 1; }
-        #category-filters { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 10px; }
-        .filter-btn { padding: 8px 18px; border: 1px solid #555; background: none; color: var(--text-color); border-radius: 20px; cursor: pointer; white-space: nowrap; }
-        .filter-btn.active, .filter-btn:hover { background-color: var(--primary-color); color: #111; border-color: var(--primary-color); }
+        #category-filters { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
+        .filter-btn { padding: 8px 18px; border: 1px solid #555; background: none; color: var(--text-color); border-radius: 20px; cursor: pointer; white-space: nowrap; transition: 0.3s; }
+        .filter-btn.active { background-color: var(--primary-color); color: #111; border-color: var(--primary-color); }
 
         #movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; }
-        .movie-card { background-color: var(--surface-color); border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.2s; display: flex; flex-direction: column; }
+        .movie-card { background-color: var(--surface-color); border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.2s; position: relative; }
         .movie-card:hover { transform: scale(1.05); }
         .movie-poster-wrapper { position: relative; width: 100%; aspect-ratio: 2 / 3; }
         .movie-poster-wrapper img { width: 100%; height: 100%; object-fit: cover; }
-        .movie-card h3 { font-size: 0.9rem; padding: 10px; margin: 0; text-align: center; color: var(--text-color); }
-        .save-button { position: absolute; top: 8px; right: 8px; background-color: rgba(0,0,0,0.6); border-radius: 50%; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; z-index: 5; border: none; color: #fff; }
-        .rating-display { position: absolute; bottom: 8px; left: 8px; background: rgba(0,0,0,0.6); color: #f5c518; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; z-index: 5; }
+        .movie-card h3 { font-size: 0.85rem; padding: 8px; margin: 0; text-align: center; }
+        .save-button { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6); border-radius: 50%; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; color: white; border: none; }
         
-        /* --- Side Menu --- */
-        #side-menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 1050; display: none; justify-content: flex-end; opacity: 0; transition: opacity 0.3s ease; }
-        #side-menu-overlay.active { display: flex; opacity: 1; }
-        #side-menu { background-color: var(--surface-color); width: 250px; height: 100%; padding: 20px; transform: translateX(100%); transition: transform 0.3s ease; }
-        #side-menu-overlay.active #side-menu { transform: translateX(0); }
-        .menu-options { list-style: none; padding: 0; margin-top: 30px; }
-        .menu-options li a { display: flex; align-items: center; gap: 10px; color: var(--text-color); text-decoration: none; font-size: 1.1rem; padding: 10px; }
-        
-        /* --- Movie Modal Style --- */
-        #movie-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--dune-bg); z-index: 1001; display: none; overflow-y: auto; }
-        .modal-container { width: 100%; max-width: 600px; margin: 0 auto; color: var(--dune-text); position: relative; background-color: var(--dune-bg); min-height: 100%; }
-        
-        /* Close Button styling fixed for top-right */
-        .modal-close-btn { position: absolute; top: 15px; right: 15px; width: 35px; height: 35px; background-color: rgba(0, 0, 0, 0.7); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; z-index: 5001; }
-        .modal-close-btn:hover { background-color: rgba(255, 0, 0, 0.7); }
+        /* --- Modal (Pop-up) --- */
+        #movie-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--dune-bg); z-index: 2000; display: none; overflow-y: auto; }
+        .modal-container { width: 100%; max-width: 600px; margin: 0 auto; color: var(--dune-text); position: relative; background-color: var(--dune-bg); min-height: 100vh; }
+        .modal-close-btn { position: absolute; top: 15px; right: 15px; width: 35px; height: 35px; background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; z-index: 5001; }
 
-        .modal-content-container { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
-        .modal-section h3 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; }
-        hr.modal-separator { border: 0; height: 1px; background-color: var(--dune-separator); }
-        .latest-movies-grid { display: flex; overflow-x: auto; gap: 1rem; padding-bottom: 10px; scrollbar-width: none; }
-        .latest-movies-grid::-webkit-scrollbar { display: none; }
-        .latest-movie-item { flex-shrink: 0; width: 100px; cursor: pointer; }
-        .latest-movie-item img { width: 100%; border-radius: 8px; margin-bottom: 0.5rem; }
+        /* Requirement Fix: No gaps in video player */
+        .media-container { width: 100%; background: #000; position: relative; line-height: 0; }
+        .poster-wrapper { padding: 3rem 1.5rem 1.5rem; display: flex; justify-content: center; line-height: normal; }
+        .poster-wrapper img { width: 100%; max-width: 260px; border-radius: 12px; aspect-ratio: 2/3; object-fit: cover; }
         
-        /* -- Details View / Player -- */
-        .media-container { width: 100%; background: #000; position: relative; }
-        
-        /* Poster View */
-        .poster-wrapper { padding: 2.5rem 1.5rem 1.5rem; display: flex; justify-content: center; }
-        .poster-wrapper img { width: 100%; max-width: 280px; height: auto; aspect-ratio: 2 / 3; object-fit: cover; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        
-        /* YouTube Style Player View (Hidden Initially) */
         .video-wrapper { display: none; width: 100%; aspect-ratio: 16 / 9; background: #000; position: relative; }
         .video-wrapper iframe { width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; }
 
-        h1 { text-align: center; font-size: 2rem; font-weight: 700; }
-        .meta-info { justify-content: center; display: flex; align-items: center; gap: 1rem; color: var(--dune-text-muted); font-size: 0.9rem; }
-        .watch-now-btn { background-color: var(--dune-button-bg); color: white; font-weight: bold; padding: 1rem; border-radius: 2rem; border: none; cursor: pointer; width: 100%; transition: background 0.3s; }
-        .watch-now-btn:hover { background-color: #2563eb; }
-        
-        .description-text { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; color: #ccc; line-height: 1.5; }
-        .description-text.expanded { -webkit-line-clamp: unset; }
-        .read-more-btn { color: var(--dune-button-bg); cursor: pointer; font-weight: 500; display: none; margin-top: 5px; }
+        .modal-content-container { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.2rem; }
+        .watch-now-btn { background-color: var(--dune-button-bg); color: white; font-weight: bold; padding: 14px; border-radius: 30px; border: none; width: 100%; cursor: pointer; }
+        .description-text { color: #ccc; font-size: 0.95rem; line-height: 1.6; }
+        .ad-banner-box { display: flex; justify-content: center; margin: 10px 0; min-height: 50px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; }
 
-        .cast-container { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1rem; color: #ccc; }
-        @media (max-width: 600px) { h1 { font-size: 1.8rem !important; } }
-        
-        /* --- Footer --- */
-        footer { background-color: var(--footer-bg-color); color: var(--footer-text-color); padding: 20px 15px; text-align: center; margin-top: auto; }
-        .footer-logo { font-size: 2rem; font-weight: 700; color: var(--primary-color); margin-bottom: 5px; }
-        .footer-nav ul { list-style: none; padding: 0; margin: 0 auto 20px auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
-        .footer-nav ul li a { color: var(--footer-link-color); text-decoration: none; font-size: 0.95rem; }
-        .social-links { list-style: none; padding: 0; margin: 0 auto 20px auto; display: flex; justify-content: center; gap: 15px; }
-        .social-links a { color: var(--footer-social-color); font-size: 1.4rem; }
-        .footer-copyright { font-size: 0.8rem; color: var(--footer-text-color); }
-        .footer-copyright span { color: var(--primary-color); font-weight: 500; }
+        footer { background: var(--surface-color); padding: 20px; text-align: center; margin-top: auto; color: #888; font-size: 0.8rem; }
     </style>
 </head>
 <body>
@@ -154,15 +89,13 @@
 
     <header>
         <div class="site-logo"><i class="fas fa-clapperboard"></i> CineStream</div>
-        <div class="header-right-controls">
+        <div class="flex gap-2">
             <div class="search-container">
                 <input type="search" id="search-input" class="search-input" placeholder="Search...">
-                <button class="search-toggle-btn"><i class="fas fa-magnifying-glass"></i></button>
+                <button class="search-toggle-btn"><i class="fas fa-search"></i></button>
             </div>
-            <button class="app-icon-btn" id="header-app-button" style="display: none;">
-                <img src="" alt="Download APK" class="app-icon-img">
-            </button>
-            <button class="menu-toggle-btn" id="main-menu-toggle"><i class="fas fa-bars"></i></button>
+            <button class="app-icon-btn" id="header-app-button" style="display: none;"><img src="" class="w-full h-full rounded"></button>
+            <button class="menu-toggle-btn" id="menu-trigger"><i class="fas fa-bars"></i></button>
         </div>
     </header>
 
@@ -171,94 +104,48 @@
         <div id="movie-grid"></div>
     </main>
     
-    <div id="side-menu-overlay">
-        <div id="side-menu">
-            <ul class="menu-options">
-                <li><a href="#" id="menu-home-btn"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="#" id="menu-saved-movies-btn"><i class="fas fa-bookmark"></i> Saved Movies</a></li>
-            </ul>
-        </div>
-    </div>
-    
-    <!-- MOVIE MODAL (Unified View) -->
+    <!-- MOVIE MODAL -->
     <div id="movie-modal">
         <div class="modal-container">
             <span class="modal-close-btn" onclick="closeModal()">&times;</span>
-
-            <!-- Top Media Container (Holds either Poster or Video) -->
             <div class="media-container">
-                <!-- Poster -->
-                <div class="poster-wrapper" id="modal-poster-wrapper">
-                    <img id="details-poster-img" alt="Movie poster" src="">
-                </div>
-                <!-- YouTube Style Video Player -->
-                <div class="video-wrapper" id="modal-video-wrapper">
-                    <iframe 
-                        id="modal-video-player" 
-                        src="" 
-                        title="Movie Player"
-                        allow="autoplay; fullscreen; encrypted-media" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
+                <div class="poster-wrapper" id="modal-poster-wrapper"><img id="details-poster-img" src=""></div>
+                <div class="video-wrapper" id="modal-video-wrapper"><iframe id="modal-video-player" src="" allowfullscreen></iframe></div>
             </div>
 
-            <!-- Content Container -->
             <div class="modal-content-container">
-                 <h1 id="details-title"></h1>
-                 <div class="meta-info">
-                     <span id="details-meta-year"></span>
+                 <h1 id="details-title" class="text-2xl font-bold text-center"></h1>
+                 <div class="flex justify-center gap-4 text-gray-400 text-sm">
+                     <span id="details-meta-info"></span>
                      <span>•</span>
-                     <span>IMDB <span id="details-rating"></span></span>
+                     <span>IMDB <span id="details-rating" class="text-yellow-500"></span></span>
                  </div>
                  
-                 <!-- Watch Now Button -->
-                 <button id="main-watch-now-trigger-new" class="watch-now-btn">Watch Now</button>
+                 <button id="watch-btn" class="watch-now-btn">Watch Now</button>
+                 <p id="details-description" class="description-text"></p>
+
+                 <hr style="border-color: #222;">
                  
+                 <!-- Cast & Crew + Ad Section -->
                  <div>
-                    <p id="details-description" class="description-text"></p>
-                    <span id="details-read-more-btn" class="read-more-btn">Read More</span>
+                    <h3 class="text-lg font-bold mb-2">Cast & Crew</h3>
+                    <!-- Banner Ad Box -->
+                    <div id="banner-ad-container" class="ad-banner-box"></div>
+                    
+                    <p id="details-director" class="text-sm text-gray-400 mb-3"></p>
+                    <div id="details-cast" class="grid grid-cols-2 gap-2 text-sm text-gray-300"></div>
                  </div>
-                 <hr class="modal-separator">
-                 <div class="modal-section">
-                    <h3>Cast & Crew</h3>
-                    <p id="details-director" class="text-sm text-gray-400"></p>
-                    <div id="details-cast-container" class="cast-container mt-4"></div>
-                 </div>
-                 <hr class="modal-separator">
-                 <div class="modal-section">
-                    <h3>Latest Movies</h3>
-                    <div id="details-latest-movies" class="latest-movies-grid"></div>
-                 </div>
+
+                 <hr style="border-color: #222;">
+                 <h3 class="text-lg font-bold">Latest Movies</h3>
+                 <div id="details-latest" class="flex gap-4 overflow-x-auto pb-4"></div>
             </div>
         </div>
     </div>
-    <!-- MOVIE MODAL END -->
 
-    <footer>
-        <h3 class="footer-logo">CineStream</h3>
-        <nav class="footer-nav">
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Movies</a></li>
-                <li><a href="#">Privacy Policy</a></li>
-            </ul>
-        </nav>
-        <p class="footer-copyright">© <span id="current-year"></span> <span>CineStream</span>. All Rights Reserved.</p>
-    </footer>
+    <footer>© <span id="year"></span> CineStream. All Rights Reserved.</footer>
 
     <script>
-        // ================= DIRECT LINK AD CONFIGURATION =================
-        // আপনার ডাইরেক্ট লিংকটি এখানে দেওয়া হলো
-        const myDirectLink = "https://www.effectivecpmnetwork.com/uv78x22pja?key=f3ffba790fbb2ff3c308626730a2c9b3";
-        
-        // অ্যাড খোলার ফাংশন (New Tab-এ ওপেন হবে, যাতে ব্যাক করলে লোডিং না নেয়)
-        function triggerAd() {
-            window.open(myDirectLink, '_blank');
-        }
-        // =================================================================
-
         // --- Firebase Config ---
         const firebaseConfig = {
             apiKey: "AIzaSyD-tlrPK8s9h87PVqtvprBy_phcCqONLeU",
@@ -267,282 +154,162 @@
             projectId: "my-movie-81a4b",
         };
         firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        const moviesRef = database.ref('movies');
-        const siteSettingsRef = database.ref('siteSettings');
+        const db = firebase.database();
 
-        // --- DOM Elements ---
-        const loader = document.getElementById('loader');
-        const movieGrid = document.getElementById('movie-grid');
-        const modal = document.getElementById('movie-modal');
-        
-        // Views inside modal
-        const posterWrapper = document.getElementById('modal-poster-wrapper');
-        const videoWrapper = document.getElementById('modal-video-wrapper');
-        const modalVideoPlayer = document.getElementById('modal-video-player');
-        const watchNowBtn = document.getElementById('main-watch-now-trigger-new');
-        
         let allMovies = [];
-        let savedMovieIds = new Set();
-        let currentMovieData = null;
+        let directLinks = ["https://www.effectivecpmnetwork.com/uv78x22pja?key=f3ffba790fbb2ff3c308626730a2c9b3"];
+        let activeBannerKey = "4fd4f9b283da8f12b3162d7d1cb23317"; 
+        let currentMovie = null;
 
+        // --- Ad Logic (Rotating Links) ---
+        function triggerAd() {
+            const randomLink = directLinks[Math.floor(Math.random() * directLinks.length)];
+            window.open(randomLink, '_blank');
+        }
+
+        function loadBannerAd() {
+            const container = document.getElementById('banner-ad-container');
+            if(!activeBannerKey) return;
+            container.innerHTML = ""; 
+            const script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.innerHTML = `atOptions = { 'key' : '${activeBannerKey}', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };`;
+            const invoke = document.createElement('script');
+            invoke.src = `https://www.highperformanceformat.com/${activeBannerKey}/invoke.js`;
+            container.appendChild(script);
+            container.appendChild(invoke);
+        }
+
+        // --- Load Data ---
         document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('current-year').textContent = new Date().getFullYear();
-            loadSavedMoviesFromLocalStorage();
-            loadMoviesAndSettings();
-            setupEventListeners();
-        });
-        
-        // গ্লোবাল অ্যাড ট্র্যাকিং (যাতে ইউজারের বেশি বিরক্তি না লাগে, শুধু একবার করে অ্যাড দেখাবে)
-        document.body.addEventListener('click', () => {
-            if (!sessionStorage.getItem('first_click_ad')) {
-                sessionStorage.setItem('first_click_ad', 'true');
-                triggerAd();
-            }
-        }, { once: true }); // পুরো ওয়েবসাইটে প্রথম ক্লিকের জন্য
-
-        function setupEventListeners() {
-            const mainMenuToggle = document.getElementById('main-menu-toggle');
-            const sideMenuOverlay = document.getElementById('side-menu-overlay');
-            mainMenuToggle.addEventListener('click', () => sideMenuOverlay.classList.add('active'));
-            sideMenuOverlay.addEventListener('click', (e) => { if (e.target === sideMenuOverlay) sideMenuOverlay.classList.remove('active'); });
-            document.getElementById('menu-home-btn').addEventListener('click', (e) => { e.preventDefault(); sideMenuOverlay.classList.remove('active'); filterByCategory('All'); });
-            document.getElementById('menu-saved-movies-btn').addEventListener('click', (e) => { e.preventDefault(); sideMenuOverlay.classList.remove('active'); filterByCategory('Saved'); });
-
-            const searchContainer = document.querySelector('.search-container');
-            const searchInput = document.getElementById('search-input');
-            document.querySelector('.search-toggle-btn').addEventListener('click', () => {
-                searchContainer.classList.toggle('active');
-                if (searchContainer.classList.contains('active')) searchInput.focus();
-            });
-            searchInput.addEventListener('input', (e) => {
-                const term = e.target.value.toLowerCase();
-                const filtered = allMovies.filter(movie => movie.title.toLowerCase().includes(term));
-                displayMovies(filtered);
-            });
-        }
-
-        function loadMoviesAndSettings() {
-            loader.style.display = 'flex';
-            Promise.all([
-                moviesRef.orderByChild('timestamp').once('value'),
-                siteSettingsRef.once('value')
-            ]).then(([moviesSnapshot, settingsSnapshot]) => {
-                const moviesData = moviesSnapshot.val();
-                if (moviesData) {
-                    allMovies = Object.entries(moviesData).map(([key, value]) => ({
-                        key, ...value,
-                        slug: (value.title || '').toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-'),
-                        rating: value.rating || (Math.random() * 2 + 7).toFixed(1)
-                    })).reverse();
-                    displayMovies(allMovies.filter(m => m.category !== 'upcoming'));
-                    populateCategories();
-                    handleUrlPath();
-                }
+            document.getElementById('year').textContent = new Date().getFullYear();
+            
+            // সেটিংস লোড করা (Admin Panel থেকে আসবে)
+            db.ref('siteSettings').on('value', snap => {
+                const s = snap.val() || {};
+                if(s.adLinks) directLinks = s.adLinks;
+                if(s.bannerKey) activeBannerKey = s.bannerKey;
                 
-                const settingsData = settingsSnapshot.val();
-                const appButton = document.getElementById('header-app-button');
-                if (settingsData && settingsData.appDownloadFileLink) {
-                    appButton.style.display = 'flex';
-                    appButton.onclick = () => window.open(settingsData.appDownloadFileLink, '_blank');
-                    if(settingsData.appIcon) appButton.querySelector('img').src = settingsData.appIcon;
-                    else appButton.querySelector('img').src = "https://ia800509.us.archive.org/0/items/68ab-4def-1a-22d-download-prev-ui/68ab4def1a22d_download_prev_ui.png";
-                } else {
-                    appButton.style.display = 'none';
+                const appBtn = document.getElementById('header-app-button');
+                if(s.appDownloadFileLink) {
+                    appBtn.style.display = 'flex';
+                    appBtn.onclick = () => window.open(s.appDownloadFileLink, '_blank');
+                    appBtn.querySelector('img').src = s.appIcon || "https://ia800509.us.archive.org/0/items/68ab-4def-1a-22d-download-prev-ui/68ab4def1a22d_download_prev_ui.png";
                 }
-
-                loader.style.display = 'none';
             });
-        }
 
-        function displayMovies(movies) {
-            movieGrid.innerHTML = '';
-            movies.forEach(movie => {
-                const isSaved = savedMovieIds.has(movie.key);
+            db.ref('movies').on('value', snap => {
+                const data = snap.val();
+                if(data) {
+                    allMovies = Object.entries(data).map(([key, val]) => ({
+                        key, ...val,
+                        slug: val.title.toLowerCase().replace(/\s+/g, '-'),
+                        rating: val.rating || (Math.random() * 2 + 7).toFixed(1)
+                    })).reverse();
+                    renderMovies(allMovies);
+                    renderCategories();
+                }
+                document.getElementById('loader').style.display = 'none';
+            });
+
+            // Search Trigger
+            document.querySelector('.search-toggle-btn').onclick = () => {
+                document.querySelector('.search-container').classList.toggle('active');
+                document.getElementById('search-input').focus();
+            };
+            document.getElementById('search-input').oninput = (e) => {
+                const val = e.target.value.toLowerCase();
+                renderMovies(allMovies.filter(m => m.title.toLowerCase().includes(val)));
+            };
+        });
+
+        function renderMovies(movies) {
+            const grid = document.getElementById('movie-grid');
+            grid.innerHTML = "";
+            movies.forEach(m => {
                 const card = document.createElement('div');
                 card.className = 'movie-card';
-                card.innerHTML = `<div class="movie-poster-wrapper"><img src="${movie.image}" loading="lazy"><button class="save-button"><i class="${isSaved ? 'fas' : 'far'} fa-bookmark"></i></button><div class="rating-display"><i class="fas fa-star"></i> <span>${movie.rating}</span></div></div><h3>${movie.title}</h3>`;
-                
-                card.addEventListener('click', (e) => {
-                    if (e.target.closest('.save-button')) { 
-                        e.stopPropagation(); toggleSaveMovie(movie.key, e.target.closest('.save-button')); 
-                    } else { 
-                        // ================= AD LOGIC: On Movie Card Click =================
-                        if (!sessionStorage.getItem('movie_card_ad')) {
-                            sessionStorage.setItem('movie_card_ad', 'true');
-                            triggerAd(); // নতুন ট্যাবে অ্যাড ওপেন হবে
-                        }
-                        // একই সাথে পপ-আপ (Modal) ওপেন হয়ে যাবে বর্তমান ট্যাবে
-                        openModal(movie); 
-                    }
-                });
-                movieGrid.appendChild(card);
+                card.innerHTML = `<div class="movie-poster-wrapper"><img src="${m.image}" loading="lazy"></div><h3>${m.title}</h3>`;
+                card.onclick = () => openModal(m);
+                grid.appendChild(card);
             });
         }
 
-        function populateCategories() {
-            const categories = ['All', ...new Set(allMovies.map(m => m.category)), 'Saved'];
-            const categoryFilters = document.getElementById('category-filters');
-            categoryFilters.innerHTML = '';
-            categories.forEach(category => {
+        function renderCategories() {
+            const cats = ['All', ...new Set(allMovies.map(m => m.category))];
+            const filterBox = document.getElementById('category-filters');
+            filterBox.innerHTML = "";
+            cats.forEach(c => {
                 const btn = document.createElement('button');
-                btn.className = 'filter-btn';
-                btn.textContent = category;
-                if (category === 'All') btn.classList.add('active');
-                btn.onclick = () => filterByCategory(category);
-                categoryFilters.appendChild(btn);
+                btn.className = 'filter-btn' + (c === 'All' ? ' active' : '');
+                btn.textContent = c;
+                btn.onclick = () => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    renderMovies(c === 'All' ? allMovies : allMovies.filter(m => m.category === c));
+                };
+                filterBox.appendChild(btn);
             });
-        }
-
-        function filterByCategory(category) {
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.toggle('active', btn.textContent === category));
-            const moviesToDisplay = category === 'Saved'
-                ? allMovies.filter(movie => savedMovieIds.has(movie.key))
-                : (category === 'All' ? allMovies.filter(m => m.category !== 'upcoming') : allMovies.filter(m => m.category === category));
-            displayMovies(moviesToDisplay);
         }
 
         function openModal(movie) {
-            currentMovieData = movie;
+            currentMovie = movie;
+            document.getElementById('movie-modal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
             
-            // 초기 অবস্থা: ভিডিও লুকানো থাকবে, পোস্টার দেখাবে এবং Watch Now বাটন দেখাবে
-            posterWrapper.style.display = 'flex';
-            videoWrapper.style.display = 'none';
-            watchNowBtn.style.display = 'block';
-            modalVideoPlayer.src = ''; 
-            
-            history.pushState({ movieId: movie.key }, movie.title, `/movie/${movie.slug}`);
-            document.title = `${movie.title} - CineStream`;
+            // Reset View
+            document.getElementById('modal-poster-wrapper').style.display = 'flex';
+            document.getElementById('modal-video-wrapper').style.display = 'none';
+            document.getElementById('modal-video-player').src = "";
+            document.getElementById('watch-btn').style.display = 'block';
 
-            populateViewData(movie);
-            
-            // Watch Now Button Event
-            watchNowBtn.onclick = () => {
-                // ================= AD LOGIC: On Watch Now Click =================
-                if (!sessionStorage.getItem('watch_now_ad')) {
-                    sessionStorage.setItem('watch_now_ad', 'true');
-                    triggerAd(); // নতুন ট্যাবে অ্যাড ওপেন হবে
-                }
-                
-                // বর্তমান ট্যাবে ভিডিও প্লে হবে (YouTube এর মতো উপরে)
-                playVideoInModal();
-            };
-            
-            modal.style.display = 'block';
-            modal.scrollTop = 0;
-            document.body.style.overflow = 'hidden'; // পেজের স্ক্রল বন্ধ
-        }
-        
-        function populateViewData(movie) {
-            const releaseYear = movie.releaseDate ? movie.releaseDate.substring(0, 4) : 'N/A';
-            document.getElementById(`details-title`).textContent = movie.title;
-            document.getElementById(`details-meta-year`).innerHTML = `<i class="fa-solid fa-masks-theater"></i> ${movie.category} (${releaseYear})`;
-            document.getElementById(`details-rating`).textContent = movie.rating || 'N/A';
-            document.getElementById(`details-director`).textContent = `Director: ${movie.director || 'N/A'}`;
+            // Populate Data
+            document.getElementById('details-title').textContent = movie.title;
+            document.getElementById('details-rating').textContent = movie.rating;
+            document.getElementById('details-meta-info').textContent = `${movie.category} (${movie.releaseDate ? movie.releaseDate.substring(0,4) : '2025'})`;
             document.getElementById('details-poster-img').src = movie.image;
-
-            const descP = document.getElementById(`details-description`);
-            const readMoreBtn = document.getElementById(`details-read-more-btn`);
-            descP.textContent = movie.description || 'No description available.';
-            descP.classList.remove('expanded');
-            readMoreBtn.style.display = 'none';
-            setTimeout(() => {
-                if (descP.scrollHeight > descP.clientHeight) {
-                    readMoreBtn.style.display = 'inline';
-                }
-            }, 100);
-            readMoreBtn.onclick = () => {
-                descP.classList.add('expanded');
-                readMoreBtn.style.display = 'none';
-            };
+            document.getElementById('details-description').textContent = movie.description;
+            document.getElementById('details-director').textContent = "Director: " + (movie.director || 'N/A');
             
-            const castContainer = document.getElementById(`details-cast-container`);
-            castContainer.innerHTML = '';
-            if(movie.cast) {
-                movie.cast.split(',').forEach(actor => {
-                    const p = document.createElement('p'); p.textContent = actor.trim(); castContainer.appendChild(p);
-                });
-            }
+            const castBox = document.getElementById('details-cast');
+            castBox.innerHTML = "";
+            if(movie.cast) movie.cast.split(',').forEach(a => castBox.innerHTML += `<span>• ${a.trim()}</span>`);
 
-            const latestGrid = document.getElementById('details-latest-movies');
-            latestGrid.innerHTML = '';
-            allMovies.filter(m => m.key !== movie.key).slice(0, 6).forEach(latest => {
-                const item = document.createElement('div');
-                item.className = 'latest-movie-item';
-                item.innerHTML = `<img src="${latest.image}" alt="${latest.title}"><p>${latest.title}</p>`;
-                item.onclick = () => {
-                    // নিচের মুভিতে ক্লিক করলেও স্ক্রল টপে যাবে এবং নতুন মুভি লোড হবে
-                    modal.scrollTop = 0;
-                    openModal(latest);
-                };
-                latestGrid.appendChild(item);
+            // Load Banner Ad
+            loadBannerAd();
+
+            // Load Latest
+            const latestBox = document.getElementById('details-latest');
+            latestBox.innerHTML = "";
+            allMovies.slice(0, 6).forEach(m => {
+                latestBox.innerHTML += `<div onclick="openModalByKey('${m.key}')" class="flex-shrink-0 w-24 cursor-pointer"><img src="${m.image}" class="rounded mb-1"><p class="text-[10px] text-center truncate">${m.title}</p></div>`;
             });
+
+            document.getElementById('watch-btn').onclick = () => {
+                triggerAd(); // ডাইরেক্ট লিঙ্ক অ্যাড
+                playVideo();
+            };
         }
 
-        // ================= Requirement 1: YouTube Style Player =================
-        function playVideoInModal() {
-            // পোস্টার লুকিয়ে ভিডিও দেখাবে
-            posterWrapper.style.display = 'none';
-            watchNowBtn.style.display = 'none'; // প্লে বাটন লুকিয়ে ফেলবে
-            videoWrapper.style.display = 'block'; 
-            
-            if (currentMovieData && currentMovieData.link) {
-                // ভিডিওর লিংকে ?autoplay=1 যোগ করে দেওয়া যায় যাতে অটো প্লে হয়
-                modalVideoPlayer.src = currentMovieData.link; 
+        function openModalByKey(key) {
+            const m = allMovies.find(x => x.key === key);
+            if(m) {
+                document.getElementById('movie-modal').scrollTop = 0;
+                openModal(m);
             }
+        }
+
+        function playVideo() {
+            document.getElementById('modal-poster-wrapper').style.display = 'none';
+            document.getElementById('watch-btn').style.display = 'none';
+            document.getElementById('modal-video-wrapper').style.display = 'block';
+            document.getElementById('modal-video-player').src = currentMovie.link;
         }
 
         function closeModal() {
-            // URL Clean up
-            if (window.location.pathname.includes('/movie/')) {
-                 history.pushState(null, "CineStream", '/');
-            }
-            document.title = "CineStream - Watch & Download Latest HD Movies";
-            
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto'; // পেজের স্ক্রল চালু
-            modalVideoPlayer.src = ''; // ভিডিও স্টপ করা
-            
-            // পপ-আপ বন্ধ করলে আবার আগের অবস্থায় ফিরিয়ে নেওয়া (পরের বার ওপেন করার জন্য)
-            posterWrapper.style.display = 'flex';
-            videoWrapper.style.display = 'none';
-            watchNowBtn.style.display = 'block';
-        }
-
-        // ব্রাউজারের ব্যাক বাটন হ্যান্ডেলিং
-        window.onpopstate = (event) => {
-            if (modal.style.display === 'block') {
-                closeModal(); // ব্যাক বাটনে চাপলে পপ-আপ বন্ধ হয়ে যাবে
-            }
-        };
-
-        function loadSavedMoviesFromLocalStorage() {
-            const saved = localStorage.getItem('cineStreamSavedMovies');
-            if (saved) savedMovieIds = new Set(JSON.parse(saved));
-        }
-        function saveMoviesToLocalStorage() {
-            localStorage.setItem('cineStreamSavedMovies', JSON.stringify([...savedMovieIds]));
-        }
-        function toggleSaveMovie(movieId, buttonElement) {
-            if (savedMovieIds.has(movieId)) {
-                savedMovieIds.delete(movieId);
-                buttonElement.querySelector('i').classList.replace('fas', 'far');
-            } else {
-                savedMovieIds.add(movieId);
-                buttonElement.querySelector('i').classList.replace('far', 'fas');
-            }
-            saveMoviesToLocalStorage();
-            if (document.querySelector('.filter-btn.active')?.textContent === 'Saved') filterByCategory('Saved');
-        }
-        function handleUrlPath() {
-            const path = window.location.pathname;
-            if (path.startsWith('/movie/')) {
-                const slug = path.split('/movie/')[1];
-                if (slug) {
-                    const movie = allMovies.find(m => m.slug === slug);
-                    if (movie) openModal(movie);
-                }
-            }
+            document.getElementById('movie-modal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            document.getElementById('modal-video-player').src = "";
         }
     </script>
 </body>
