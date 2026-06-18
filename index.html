@@ -23,63 +23,63 @@
             --background-color: #1a1a1a;
             --surface-color: #111111;
             --text-color: #e0e0e0;
-            --font-family: 'Roboto', sans-serif;
             --button-bg-light: #333333;
             --button-border-color: #4a4a4a;
-            --icon-color: #b0b0b0;
             --dune-bg: #0D1117;
             --dune-text: #E0E0E0;
-            --dune-text-muted: #8B949E;
             --dune-button-bg: #3B82F6;
-            --dune-separator: #21262d;
         }
-        body { font-family: var(--font-family); background-color: var(--background-color); color: var(--text-color); margin: 0; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+        body { font-family: 'Roboto', sans-serif; background-color: var(--background-color); color: var(--text-color); margin: 0; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
         
-        /* --- Loader --- */
-        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--background-color); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--background-color); display: flex; justify-content: center; align-items: center; z-index: 9999; }
         .spinner { border: 6px solid #f3f3f330; border-top: 6px solid var(--primary-color); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* --- Header --- */
         header { background-color: var(--background-color); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
         .site-logo { display: flex; align-items: center; gap: 10px; font-size: 1.5rem; font-weight: 700; color: var(--text-color); }
         .site-logo i { color: var(--primary-color); }
+        
+        .header-right { display: flex; align-items: center; gap: 10px; }
         .search-container { display: flex; align-items: center; background-color: var(--button-bg-light); border: 1px solid var(--button-border-color); border-radius: 8px; overflow: hidden; transition: 0.3s; }
         .search-input { width: 0; padding: 0; border: none; background: transparent; color: white; outline: none; transition: 0.3s; opacity: 0; }
-        .search-container.active .search-input { width: 120px; padding: 8px 10px; opacity: 1; }
-        .search-toggle-btn, .menu-toggle-btn, .app-icon-btn { background: var(--button-bg-light); border: 1px solid var(--button-border-color); border-radius: 8px; width: 36px; height: 36px; color: var(--icon-color); cursor: pointer; display: flex; justify-content: center; align-items: center; }
+        .search-container.active .search-input { width: 100px; padding: 8px 10px; opacity: 1; }
+        
+        .search-toggle-btn, .menu-toggle-btn, .app-icon-btn { background: var(--button-bg-light); border: 1px solid var(--button-border-color); border-radius: 8px; width: 36px; height: 36px; color: #b0b0b0; cursor: pointer; display: flex; justify-content: center; align-items: center; padding: 0; }
+        .app-icon-btn img { width: 100%; height: 100%; object-fit: contain; border-radius: 6px; }
 
-        /* --- Main Content --- */
+        /* Side Menu */
+        #side-menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1050; display: none; justify-content: flex-end; }
+        #side-menu { background-color: var(--surface-color); width: 250px; height: 100%; padding: 20px; transform: translateX(100%); transition: 0.3s; }
+        #side-menu-overlay.active { display: flex; }
+        #side-menu-overlay.active #side-menu { transform: translateX(0); }
+        .menu-options { list-style: none; padding: 0; margin-top: 40px; }
+        .menu-options li a { display: flex; align-items: center; gap: 12px; color: var(--text-color); text-decoration: none; padding: 15px; font-size: 1.1rem; border-bottom: 1px solid #222; }
+
         main { padding: 20px; flex-grow: 1; }
-        #category-filters { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
-        .filter-btn { padding: 8px 18px; border: 1px solid #555; background: none; color: var(--text-color); border-radius: 20px; cursor: pointer; white-space: nowrap; transition: 0.3s; }
+        #category-filters { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; scrollbar-width: none; }
+        .filter-btn { padding: 8px 18px; border: 1px solid #555; background: none; color: var(--text-color); border-radius: 20px; cursor: pointer; white-space: nowrap; }
         .filter-btn.active { background-color: var(--primary-color); color: #111; border-color: var(--primary-color); }
 
         #movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; }
-        .movie-card { background-color: var(--surface-color); border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.2s; position: relative; }
-        .movie-card:hover { transform: scale(1.05); }
-        .movie-poster-wrapper { position: relative; width: 100%; aspect-ratio: 2 / 3; }
+        .movie-card { background-color: var(--surface-color); border-radius: 8px; overflow: hidden; cursor: pointer; }
+        .movie-poster-wrapper { width: 100%; aspect-ratio: 2 / 3; }
         .movie-poster-wrapper img { width: 100%; height: 100%; object-fit: cover; }
         .movie-card h3 { font-size: 0.85rem; padding: 8px; margin: 0; text-align: center; }
-        .save-button { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6); border-radius: 50%; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; color: white; border: none; }
         
-        /* --- Modal (Pop-up) --- */
+        /* Modal */
         #movie-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--dune-bg); z-index: 2000; display: none; overflow-y: auto; }
         .modal-container { width: 100%; max-width: 600px; margin: 0 auto; color: var(--dune-text); position: relative; background-color: var(--dune-bg); min-height: 100vh; }
         .modal-close-btn { position: absolute; top: 15px; right: 15px; width: 35px; height: 35px; background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; z-index: 5001; }
 
-        /* Requirement Fix: No gaps in video player */
         .media-container { width: 100%; background: #000; position: relative; line-height: 0; }
-        .poster-wrapper { padding: 3rem 1.5rem 1.5rem; display: flex; justify-content: center; line-height: normal; }
-        .poster-wrapper img { width: 100%; max-width: 260px; border-radius: 12px; aspect-ratio: 2/3; object-fit: cover; }
-        
         .video-wrapper { display: none; width: 100%; aspect-ratio: 16 / 9; background: #000; position: relative; }
         .video-wrapper iframe { width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; }
+        .poster-wrapper { padding: 3rem 1.5rem 1.5rem; display: flex; justify-content: center; }
+        .poster-wrapper img { width: 100%; max-width: 260px; border-radius: 12px; }
 
         .modal-content-container { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.2rem; }
         .watch-now-btn { background-color: var(--dune-button-bg); color: white; font-weight: bold; padding: 14px; border-radius: 30px; border: none; width: 100%; cursor: pointer; }
-        .description-text { color: #ccc; font-size: 0.95rem; line-height: 1.6; }
-        .ad-banner-box { display: flex; justify-content: center; margin: 10px 0; min-height: 50px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; }
+        .ad-banner-box { display: flex; justify-content: center; margin: 10px 0; min-height: 50px; background: rgba(255,255,255,0.05); }
 
         footer { background: var(--surface-color); padding: 20px; text-align: center; margin-top: auto; color: #888; font-size: 0.8rem; }
     </style>
@@ -89,15 +89,27 @@
 
     <header>
         <div class="site-logo"><i class="fas fa-clapperboard"></i> CineStream</div>
-        <div class="flex gap-2">
+        <div class="header-right">
             <div class="search-container">
                 <input type="search" id="search-input" class="search-input" placeholder="Search...">
                 <button class="search-toggle-btn"><i class="fas fa-search"></i></button>
             </div>
-            <button class="app-icon-btn" id="header-app-button" style="display: none;"><img src="" class="w-full h-full rounded"></button>
+            <!-- অ্যাপ ডাউনলোড আইকন -->
+            <button class="app-icon-btn" id="header-app-button" style="display: none;"><img src="" id="app-img"></button>
+            <!-- থ্রি ডট মেনু -->
             <button class="menu-toggle-btn" id="menu-trigger"><i class="fas fa-bars"></i></button>
         </div>
     </header>
+
+    <!-- সাইড মেনু ওভারলে -->
+    <div id="side-menu-overlay">
+        <div id="side-menu">
+            <ul class="menu-options">
+                <li><a href="/"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="#" onclick="alert('Coming Soon!')"><i class="fas fa-bookmark"></i> Saved</a></li>
+            </ul>
+        </div>
+    </div>
 
     <main>
         <div id="category-filters"></div>
@@ -122,18 +134,20 @@
                  </div>
                  
                  <button id="watch-btn" class="watch-now-btn">Watch Now</button>
-                 <p id="details-description" class="description-text"></p>
+                 <p id="details-description" class="text-gray-300 text-sm leading-relaxed"></p>
 
                  <hr style="border-color: #222;">
-                 
-                 <!-- Cast & Crew + Ad Section -->
                  <div>
                     <h3 class="text-lg font-bold mb-2">Cast & Crew</h3>
-                    <!-- Banner Ad Box -->
-                    <div id="banner-ad-container" class="ad-banner-box"></div>
-                    
-                    <p id="details-director" class="text-sm text-gray-400 mb-3"></p>
-                    <div id="details-cast" class="grid grid-cols-2 gap-2 text-sm text-gray-300"></div>
+                    <div class="ad-banner-box">
+                         <!-- ব্যানার অ্যাড স্ক্রিপ্ট -->
+                         <script type="text/javascript">
+                            atOptions = { 'key' : '4fd4f9b283da8f12b3162d7d1cb23317', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+                         </script>
+                         <script type="text/javascript" src="https://www.highperformanceformat.com/4fd4f9b283da8f12b3162d7d1cb23317/invoke.js"></script>
+                    </div>
+                    <p id="details-director" class="text-sm text-gray-400 mb-2"></p>
+                    <div id="details-cast" class="grid grid-cols-2 gap-2 text-xs text-gray-400"></div>
                  </div>
 
                  <hr style="border-color: #222;">
@@ -146,7 +160,6 @@
     <footer>© <span id="year"></span> CineStream. All Rights Reserved.</footer>
 
     <script>
-        // --- Firebase Config ---
         const firebaseConfig = {
             apiKey: "AIzaSyD-tlrPK8s9h87PVqtvprBy_phcCqONLeU",
             authDomain: "my-movie-81a4b.firebaseapp.com",
@@ -157,62 +170,45 @@
         const db = firebase.database();
 
         let allMovies = [];
-        let directLinks = ["https://www.effectivecpmnetwork.com/uv78x22pja?key=f3ffba790fbb2ff3c308626730a2c9b3"];
-        let activeBannerKey = "4fd4f9b283da8f12b3162d7d1cb23317"; 
         let currentMovie = null;
 
-        // --- Ad Logic (Rotating Links) ---
-        function triggerAd() {
-            const randomLink = directLinks[Math.floor(Math.random() * directLinks.length)];
-            window.open(randomLink, '_blank');
-        }
-
-        function loadBannerAd() {
-            const container = document.getElementById('banner-ad-container');
-            if(!activeBannerKey) return;
-            container.innerHTML = ""; 
-            const script = document.createElement('script');
-            script.type = 'text/javascript';
-            script.innerHTML = `atOptions = { 'key' : '${activeBannerKey}', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };`;
-            const invoke = document.createElement('script');
-            invoke.src = `https://www.highperformanceformat.com/${activeBannerKey}/invoke.js`;
-            container.appendChild(script);
-            container.appendChild(invoke);
-        }
-
-        // --- Load Data ---
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('year').textContent = new Date().getFullYear();
             
-            // সেটিংস লোড করা (Admin Panel থেকে আসবে)
+            // সাইট সেটিংস লোড (অ্যাপ আইকন)
             db.ref('siteSettings').on('value', snap => {
                 const s = snap.val() || {};
-                if(s.adLinks) directLinks = s.adLinks;
-                if(s.bannerKey) activeBannerKey = s.bannerKey;
-                
                 const appBtn = document.getElementById('header-app-button');
                 if(s.appDownloadFileLink) {
                     appBtn.style.display = 'flex';
                     appBtn.onclick = () => window.open(s.appDownloadFileLink, '_blank');
-                    appBtn.querySelector('img').src = s.appIcon || "https://ia800509.us.archive.org/0/items/68ab-4def-1a-22d-download-prev-ui/68ab4def1a22d_download_prev_ui.png";
+                    document.getElementById('app-img').src = s.appIcon || "https://ia800509.us.archive.org/0/items/68ab-4def-1a-22d-download-prev-ui/68ab4def1a22d_download_prev_ui.png";
                 }
             });
 
+            // মুভি লোড
             db.ref('movies').on('value', snap => {
                 const data = snap.val();
                 if(data) {
                     allMovies = Object.entries(data).map(([key, val]) => ({
                         key, ...val,
-                        slug: val.title.toLowerCase().replace(/\s+/g, '-'),
+                        slug: val.title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-'),
                         rating: val.rating || (Math.random() * 2 + 7).toFixed(1)
                     })).reverse();
                     renderMovies(allMovies);
                     renderCategories();
+                    handleUrlPath(); 
                 }
                 document.getElementById('loader').style.display = 'none';
             });
 
-            // Search Trigger
+            // মেনু ট্রিগার
+            const menuBtn = document.getElementById('menu-trigger');
+            const overlay = document.getElementById('side-menu-overlay');
+            menuBtn.onclick = () => overlay.classList.add('active');
+            overlay.onclick = (e) => { if(e.target === overlay) overlay.classList.remove('active'); };
+
+            // সার্চ ট্রিগার
             document.querySelector('.search-toggle-btn').onclick = () => {
                 document.querySelector('.search-container').classList.toggle('active');
                 document.getElementById('search-input').focus();
@@ -222,6 +218,55 @@
                 renderMovies(allMovies.filter(m => m.title.toLowerCase().includes(val)));
             };
         });
+
+        function handleUrlPath() {
+            const path = window.location.pathname.substring(1);
+            if (path && path !== "" && path !== "index.html") {
+                const movie = allMovies.find(m => m.slug === path);
+                if (movie) openModal(movie);
+            }
+        }
+
+        function openModal(movie) {
+            currentMovie = movie;
+            history.pushState({ movieId: movie.key }, movie.title, `/${movie.slug}`);
+            document.title = `${movie.title} - CineStream`;
+
+            document.getElementById('movie-modal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            
+            document.getElementById('modal-poster-wrapper').style.display = 'flex';
+            document.getElementById('modal-video-wrapper').style.display = 'none';
+            document.getElementById('modal-video-player').src = "";
+            document.getElementById('watch-btn').style.display = 'block';
+
+            document.getElementById('details-title').textContent = movie.title;
+            document.getElementById('details-rating').textContent = movie.rating;
+            document.getElementById('details-meta-info').textContent = `${movie.category} (${movie.releaseDate ? movie.releaseDate.substring(0,4) : '2025'})`;
+            document.getElementById('details-poster-img').src = movie.image;
+            document.getElementById('details-description').textContent = movie.description;
+            document.getElementById('details-director').textContent = "Director: " + (movie.director || 'N/A');
+            
+            const castBox = document.getElementById('details-cast');
+            castBox.innerHTML = "";
+            if(movie.cast) movie.cast.split(',').forEach(a => castBox.innerHTML += `<span>• ${a.trim()}</span>`);
+
+            const latestBox = document.getElementById('details-latest');
+            latestBox.innerHTML = "";
+            allMovies.slice(0, 6).forEach(m => {
+                latestBox.innerHTML += `<div onclick="openModalByKey('${m.key}')" class="flex-shrink-0 w-24 cursor-pointer"><img src="${m.image}" class="rounded mb-1"><p class="text-[10px] text-center truncate">${m.title}</p></div>`;
+            });
+
+            document.getElementById('watch-btn').onclick = () => playVideo();
+        }
+
+        function closeModal() {
+            if (window.location.pathname !== '/') history.pushState(null, "CineStream", '/');
+            document.title = "CineStream - Watch & Download Latest HD Movies";
+            document.getElementById('movie-modal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            document.getElementById('modal-video-player').src = "";
+        }
 
         function renderMovies(movies) {
             const grid = document.getElementById('movie-grid');
@@ -252,45 +297,6 @@
             });
         }
 
-        function openModal(movie) {
-            currentMovie = movie;
-            document.getElementById('movie-modal').style.display = 'block';
-            document.body.style.overflow = 'hidden';
-            
-            // Reset View
-            document.getElementById('modal-poster-wrapper').style.display = 'flex';
-            document.getElementById('modal-video-wrapper').style.display = 'none';
-            document.getElementById('modal-video-player').src = "";
-            document.getElementById('watch-btn').style.display = 'block';
-
-            // Populate Data
-            document.getElementById('details-title').textContent = movie.title;
-            document.getElementById('details-rating').textContent = movie.rating;
-            document.getElementById('details-meta-info').textContent = `${movie.category} (${movie.releaseDate ? movie.releaseDate.substring(0,4) : '2025'})`;
-            document.getElementById('details-poster-img').src = movie.image;
-            document.getElementById('details-description').textContent = movie.description;
-            document.getElementById('details-director').textContent = "Director: " + (movie.director || 'N/A');
-            
-            const castBox = document.getElementById('details-cast');
-            castBox.innerHTML = "";
-            if(movie.cast) movie.cast.split(',').forEach(a => castBox.innerHTML += `<span>• ${a.trim()}</span>`);
-
-            // Load Banner Ad
-            loadBannerAd();
-
-            // Load Latest
-            const latestBox = document.getElementById('details-latest');
-            latestBox.innerHTML = "";
-            allMovies.slice(0, 6).forEach(m => {
-                latestBox.innerHTML += `<div onclick="openModalByKey('${m.key}')" class="flex-shrink-0 w-24 cursor-pointer"><img src="${m.image}" class="rounded mb-1"><p class="text-[10px] text-center truncate">${m.title}</p></div>`;
-            });
-
-            document.getElementById('watch-btn').onclick = () => {
-                triggerAd(); // ডাইরেক্ট লিঙ্ক অ্যাড
-                playVideo();
-            };
-        }
-
         function openModalByKey(key) {
             const m = allMovies.find(x => x.key === key);
             if(m) {
@@ -306,11 +312,7 @@
             document.getElementById('modal-video-player').src = currentMovie.link;
         }
 
-        function closeModal() {
-            document.getElementById('movie-modal').style.display = 'none';
-            document.body.style.overflow = 'auto';
-            document.getElementById('modal-video-player').src = "";
-        }
+        window.onpopstate = () => { if (document.getElementById('movie-modal').style.display === 'block') closeModal(); };
     </script>
 </body>
 </html>
